@@ -1,0 +1,24 @@
+import IconoEmpleados from "./IconoEmpleados";
+import IconoReportes from "./IconoReportes";
+import IconoUsuarios from "./IconoUsuarios";
+import IconoPerfil from "./IconoPerfil";
+import IconoCerrarSesion from "./IconoCerrarSesion";
+import IconoCrear from "./IconoCrear";
+import IconoDireccion from "./IconoDireccion";
+import IconoEmpleadosTabla from "./IconoEmpleados";
+import IconoVehiculos from "./IconoVehiculos";
+import IconoChofer from "./IconoChofer";
+import IconoRuta from "./IconoRuta";
+export {
+  IconoEmpleados,
+  IconoReportes,
+  IconoUsuarios,
+  IconoPerfil,
+  IconoCerrarSesion,
+  IconoCrear,
+  IconoDireccion,
+  IconoEmpleadosTabla,
+  IconoVehiculos,
+  IconoChofer,
+  IconoRuta,
+};
