@@ -34,19 +34,19 @@ const VehiculoDetalles = ({ visible, onHide, vehiculo }) => {
               <div>
                 <p className="text-sm text-gray-500">Nombre</p>
                 <p className="font-medium">
-                  {vehiculo.nombre_vehiculo || "No especificado"}
+                  {vehiculo.nombre || "No especificado"}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Tipo de Maquinaria</p>
                 <p className="font-medium">
-                  {vehiculo.tipo_maquinaria || "No especificado"}
+                  {vehiculo.tipoMaquinaria || "No especificado"}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Estado Operativo</p>
                 <p className="font-medium">
-                  {vehiculo.estado_operativo || "No especificado"}
+                  {vehiculo.estadoOperativo || "No especificado"}
                 </p>
               </div>
             </div>
@@ -61,16 +61,16 @@ const VehiculoDetalles = ({ visible, onHide, vehiculo }) => {
                   Capacidad de Combustible
                 </p>
                 <p className="font-medium">
-                  {vehiculo.capacidad_combustible
-                    ? `${vehiculo.capacidad_combustible} L`
+                  {vehiculo.capacidadCombustible
+                    ? `${vehiculo.capacidadCombustible} L`
                     : "No especificado"}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Consumo de Combustible</p>
                 <p className="font-medium">
-                  {vehiculo.consumo_combustible_km
-                    ? `${vehiculo.consumo_combustible_km} km/L`
+                  {vehiculo.consumoCombustibleKm
+                    ? `${vehiculo.consumoCombustibleKm} km/L`
                     : "No especificado"}
                 </p>
               </div>
@@ -88,7 +88,7 @@ const VehiculoDetalles = ({ visible, onHide, vehiculo }) => {
               <div>
                 <p className="text-sm text-gray-500">Fecha de Registro</p>
                 <p className="font-medium">
-                  {formatDate(vehiculo.fecha_registro)}
+                  {formatDate(vehiculo.fechaRegistro)}
                 </p>
               </div>
               <div>
