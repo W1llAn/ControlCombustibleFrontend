@@ -5,13 +5,6 @@ const ModalFormulario = ({ visible, onHide, titulo, children, footer }) => {
   const renderHeader = () => (
     <div className="flex justify-content-between align-items-center">
       <span>{titulo}</span>
-      <button
-        data-testid="modal-close-button"
-        onClick={onHide}
-        className="p-dialog-header-icon p-dialog-header-close p-link"
-      >
-        <span className="pi pi-times" />
-      </button>
     </div>
   );
 

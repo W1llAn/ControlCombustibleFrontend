@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import DataTableGenerico from "../components/DataTableGenerico";
 import getBadgeClassType from "../utils/badges";
 import {
@@ -13,79 +13,35 @@ import AccionesTemplate from "../components/AccionesTemplate";
 import { Button } from "primereact/button";
 import Boton from "../components/Boton";
 import { InputSwitch } from "primereact/inputswitch";
+import FormularioGenerico from "../components/FormularioGenerico";
+import ModalFormulario from "../components/ModalFormulario";
+import VehiculoDetalles from "../components/VehiculoDetalles";
+import useVehiculos from "../hooks/useVehiculos";
+
 function Vehiculos() {
-  const [estadoOperativoMap, setEstadoOperativoMap] = useState({});
-
-  const handleEstadoChange = (id, value) => {
-    setEstadoOperativoMap((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-    console.log("Estado Operativo cambiado:", id, value);
-  };
-
-  const data = [
-    {
-      id: 1,
-      placa: "ABC123",
-      nombre_vehiculo: "Toyota Hilux",
-      descripcion: "Vehículo liviano para transporte urbano.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 80.5,
-      fecha_registro: "2024-12-01T10:00:00",
-      connsumo_combustible_km: 5.2,
-      estado: "Activo",
-    },
-    {
-      id: 2,
-      placa: "XYZ789",
-      nombre_vehiculo: "Caterpillar 950M",
-      descripcion: "Cargadora pesada usada en obras viales.",
-      tipo_maquinaria: "Pesada",
-      estado_operativo: "Mantenimiento",
-      capacidad_combustible: 120.0,
-      fecha_registro: "2023-08-15T14:30:00",
-      connsumo_combustible_km: 3.8,
-      estado: "Activo",
-    },
-    {
-      id: 3,
-      placa: "LMN456",
-      nombre_vehiculo: "Ford Ranger",
-      descripcion: "Camioneta liviana con uso en logística.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 65.0,
-      fecha_registro: "2025-01-10T08:45:00",
-      connsumo_combustible_km: 6.1,
-      estado: "Eliminado",
-    },
-    {
-      id: 4,
-      placa: "DEF234",
-      nombre_vehiculo: "Volvo FMX",
-      descripcion: "Camión pesado para transporte de carga.",
-      tipo_maquinaria: "Pesada",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 150.2,
-      fecha_registro: "2022-05-20T11:15:00",
-      connsumo_combustible_km: 4.3,
-      estado: "Activo",
-    },
-    {
-      id: 5,
-      placa: "GHI567",
-      nombre_vehiculo: "Nissan Frontier",
-      descripcion: "Vehículo de apoyo en operaciones de campo.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Mantenimiento",
-      capacidad_combustible: 70.0,
-      fecha_registro: "2023-11-25T09:00:00",
-      connsumo_combustible_km: 5.0,
-      estado: "Activo",
-    },
-  ];
+  const {
+    data,
+    modalVisible,
+    globalFilter,
+    setGlobalFilter,
+    vehiculoSeleccionado,
+    detalleVisible,
+    isEditing,
+    nuevoVehiculo,
+    setNuevoVehiculo,
+    formFields,
+    errors,
+    isSubmitting,
+    estadoOperativoMap,
+    handleEstadoChange,
+    handleNuevoVehiculo,
+    handleEdit,
+    handleDelete,
+    handleVerDetalles,
+    handleCancel,
+    handleGuardarVehiculo,
+    handleCerrarDetalles,
+  } = useVehiculos();
 
   const columns = [
     {
@@ -154,26 +110,44 @@ function Vehiculos() {
       sortable: false,
     },
   ];
+
   const actions = (data) => (
     <div className="flex gap-2">
       {AccionesTemplate({
         data,
-        onEdit: () => {
-          console.log("editar");
-        },
-        onDelete: () => {
-          console.log("eliminar");
-        },
+        onEdit: () => handleEdit(data),
+        onDelete: () => handleDelete(data),
       })}
       <Button
         icon="pi pi-eye"
         className="p-button-rounded p-button-info p-button-text p-button-sm"
-        onClick={() => console.log("ver detalles")}
+        onClick={() => handleVerDetalles(data)}
         tooltip="Ver detalles"
         tooltipOptions={{ position: "top" }}
       />
     </div>
   );
+
+  // Footer del modal del formulario
+  const modalFooter = (
+    <div className="flex justify-content-end gap-2">
+      <Button
+        label="Cancelar"
+        icon="pi pi-times"
+        className=" p-button-danger"
+        onClick={handleCancel}
+        disabled={isSubmitting}
+      />
+      <Button
+        label={isEditing ? "Actualizar" : "Guardar"}
+        icon="pi pi-check"
+        className="p-button-primary"
+        onClick={handleGuardarVehiculo}
+        loading={isSubmitting}
+      />
+    </div>
+  );
+
   return (
     <section className="py-6 px-4">
       <div className="flex flex-row justify-between">
@@ -181,14 +155,40 @@ function Vehiculos() {
         <Boton
           text="Registrar Vehículo"
           icon={IconoCrear}
-          onClick={() => console.log("Modal Visible")}
+          onClick={handleNuevoVehiculo}
         />
       </div>
       <DataTableGenerico
         data={data}
         columns={columns}
         actions={actions}
-      ></DataTableGenerico>
+        globalFilter={globalFilter}
+        onGlobalFilterChange={setGlobalFilter}
+      />
+      <ModalFormulario
+        visible={modalVisible}
+        onHide={handleCancel}
+        titulo={isEditing ? "Editar Vehículo" : "Registrar Vehículo"}
+        footer={modalFooter}
+      >
+        <FormularioGenerico
+          fields={formFields}
+          formData={nuevoVehiculo}
+          onChange={(field, value) =>
+            setNuevoVehiculo({ ...nuevoVehiculo, [field]: value })
+          }
+        />
+        {Object.keys(errors).length > 0 && (
+          <div className="text-red-500 text-sm mt-2">
+            {errors.submit || "Por favor, corrige los errores en el formulario"}
+          </div>
+        )}
+      </ModalFormulario>
+      <VehiculoDetalles
+        visible={detalleVisible}
+        onHide={handleCerrarDetalles}
+        vehiculo={vehiculoSeleccionado}
+      />
     </section>
   );
 }
