@@ -14,7 +14,7 @@ const Boton = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white bg-primary hover:bg-prymary-light transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-[#0079ff] text-white hover:cursor-pointer transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
       data-testid={dataTestId} // Agregamos data-testid
     >
       {Icon && <Icon className="w-5 h-5" />}

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import DataTableGenerico from "../components/DataTableGenerico";
 import getBadgeClassType from "../utils/badges";
 import {
   IconoCombustible,
+  IconoCrear,
   IconoEstado,
   IconoNombreVehiculo,
   IconoPlaca,
@@ -10,8 +11,19 @@ import {
 } from "../assets/IconosComponentes";
 import AccionesTemplate from "../components/AccionesTemplate";
 import { Button } from "primereact/button";
-
+import Boton from "../components/Boton";
+import { InputSwitch } from "primereact/inputswitch";
 function Vehiculos() {
+  const [estadoOperativoMap, setEstadoOperativoMap] = useState({});
+
+  const handleEstadoChange = (id, value) => {
+    setEstadoOperativoMap((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+    console.log("Estado Operativo cambiado:", id, value);
+  };
+
   const data = [
     {
       id: 1,
@@ -124,6 +136,21 @@ function Vehiculos() {
           <IconoEstado /> Estado Operativo
         </div>
       ),
+      body: (rowData) => {
+        const isChecked =
+          estadoOperativoMap[rowData.id] ??
+          rowData.estado_operativo === "Operativo";
+
+        return (
+          <div className="flex items-center gap-2 flex-col">
+            <span>{isChecked ? "Operativo" : "Mantenimiento"}</span>
+            <InputSwitch
+              checked={isChecked}
+              onChange={(e) => handleEstadoChange(rowData.id, e.value)}
+            />
+          </div>
+        );
+      },
       sortable: false,
     },
   ];
@@ -148,11 +175,21 @@ function Vehiculos() {
     </div>
   );
   return (
-    <DataTableGenerico
-      data={data}
-      columns={columns}
-      actions={actions}
-    ></DataTableGenerico>
+    <section className="py-6 px-4">
+      <div className="flex flex-row justify-between">
+        <h1 className="text-3xl font-bold">Gestión de Vehículos</h1>
+        <Boton
+          text="Registrar Vehículo"
+          icon={IconoCrear}
+          onClick={() => console.log("Modal Visible")}
+        />
+      </div>
+      <DataTableGenerico
+        data={data}
+        columns={columns}
+        actions={actions}
+      ></DataTableGenerico>
+    </section>
   );
 }
 
