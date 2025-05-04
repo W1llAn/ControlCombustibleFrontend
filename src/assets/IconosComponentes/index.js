@@ -5,7 +5,7 @@ import IconoPerfil from "./IconoPerfil";
 import IconoCerrarSesion from "./IconoCerrarSesion";
 import IconoCrear from "./IconoCrear";
 import IconoDireccion from "./IconoDireccion";
-import IconoEmpleadosTabla from "./IconoEmpleados";
+import IconoEmpleadosTabla from "./IconoEmpleadosTabla";
 import IconoVehiculos from "./IconoVehiculos";
 import IconoChofer from "./IconoChofer";
 import IconoRuta from "./IconoRuta";
