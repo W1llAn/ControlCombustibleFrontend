@@ -1,9 +1,10 @@
 import { PrimeReactProvider } from "primereact/api";
+import Home from "./pages/Home";
 function App() {
   return (
     <>
       <PrimeReactProvider>
-        <h1 className="font-extrabold">Control Combustibles</h1>
+        <Home />
       </PrimeReactProvider>
     </>
   );
