@@ -40,6 +40,7 @@ const DataTableGenerico = ({
         {Array.isArray(columns) &&
           columns.map((col) => (
             <Column
+              align="center"
               key={col.field}
               field={col.field}
               header={col.header}

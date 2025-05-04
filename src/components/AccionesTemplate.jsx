@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Button } from "primereact/button"; // Usamos íconos con p-button
 
-const accionesTemplate = ({ rowData, onEdit, onDelete }) => {
+const AccionesTemplate = ({ rowData, onEdit, onDelete }) => {
   // Validaciones para asegurarse de que onEdit y onDelete sean funciones
   const handleEdit =
     typeof onEdit === "function" ? () => onEdit(rowData) : () => {};
@@ -26,9 +26,9 @@ const accionesTemplate = ({ rowData, onEdit, onDelete }) => {
     </div>
   );
 };
-accionesTemplate.propTypes = {
+AccionesTemplate.propTypes = {
   rowData: PropTypes.object.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
-export default accionesTemplate;
+export default AccionesTemplate;

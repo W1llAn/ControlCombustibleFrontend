@@ -9,6 +9,11 @@ import IconoEmpleadosTabla from "./IconoEmpleados";
 import IconoVehiculos from "./IconoVehiculos";
 import IconoChofer from "./IconoChofer";
 import IconoRuta from "./IconoRuta";
+import IconoNombreVehiculo from "./IconoNombreVehiculo";
+import IconoPlaca from "./IconoPlaca";
+import IconoCombustible from "./IconoCombustible";
+import IconoTipoMaquinaria from "./IconoTipoMaquinaria";
+import IconoEstado from "./IconoEstado";
 export {
   IconoEmpleados,
   IconoReportes,
@@ -21,4 +26,9 @@ export {
   IconoVehiculos,
   IconoChofer,
   IconoRuta,
+  IconoNombreVehiculo,
+  IconoPlaca,
+  IconoCombustible,
+  IconoTipoMaquinaria,
+  IconoEstado,
 };
