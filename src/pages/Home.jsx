@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconoCerrarSesion,
   IconoChofer,
@@ -8,10 +8,51 @@ import {
   IconoVehiculos,
 } from "../assets/IconosComponentes";
 import Vehiculos from "./Vehiculos";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toast = useRef(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    confirmDialog({
+      message: "¿Estás seguro que deseas cerrar sesión?",
+      header: "Confirmación de cierre de sesión",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      accept: () => {
+        localStorage.removeItem("jwtToken");
+        toast.current.show({
+          severity: "success",
+          summary: "Sesión finalizada",
+          detail: "Has cerrado sesión correctamente",
+          life: 3000,
+        });
+        setTimeout(() => navigate("/login"), 1000);
+      },
+      reject: () => {
+        toast.current.show({
+          severity: "info",
+          summary: "Operación cancelada",
+          detail: "Continúas en la sesión actual",
+          life: 3000,
+        });
+      },
+    });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const navItems = [
     { key: "vehiculos", label: "Vehiculos", icon: <IconoVehiculos /> },
@@ -45,8 +86,7 @@ const Home = () => {
           style={{
             backgroundImage:
               "linear-gradient(to left, rgba(78, 89, 246), #725AC1)",
-          }}
-        >
+          }}>
           Control Combustibles XYZ
         </span>
       </a>
@@ -61,8 +101,7 @@ const Home = () => {
             }}
             className={`${baseLinkClasses} ${
               activeSection === key ? "bg-hover-gray text-gray-700" : ""
-            }`}
-          >
+            }`}>
             <span className="mx-2">{icon}</span>
             <span className="mx-4 font-semibold">{label}</span>
           </div>
@@ -70,11 +109,8 @@ const Home = () => {
       </nav>
 
       <div
-        onClick={() => {
-          console.log("cerrar sesion");
-        }}
-        className={`${baseLinkClasses} items-center justify-center mt-auto`}
-      >
+        onClick={handleLogout} // Usar la nueva función aquí
+        className={`${baseLinkClasses} items-center justify-center mt-auto`}>
         <IconoCerrarSesion />
         <span className="mx-4 font-medium">Cerrar Sesión</span>
       </div>
@@ -83,6 +119,8 @@ const Home = () => {
 
   return (
     <div className="flex h-screen">
+      <Toast ref={toast} position="top-right" />
+      <ConfirmDialog />
       {/* Sidebar fijo en desktop */}
       <aside className="hidden md:flex w-64 bg-bg-primary shadow-lg p-4">
         <SidebarContent />
@@ -92,15 +130,13 @@ const Home = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-[rgba(0,0,0,0.22)] z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
+          onClick={() => setSidebarOpen(false)}></div>
       )}
 
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-bg-primary p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden`}
-      >
+        } transition-transform duration-300 ease-in-out md:hidden`}>
         <SidebarContent />
       </div>
 
@@ -111,8 +147,7 @@ const Home = () => {
           {/* Menú móvil */}
           <button
             className="md:hidden text-2xl text-gray-700 z-40"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
+            onClick={() => setSidebarOpen(!sidebarOpen)}>
             <i className="pi pi-bars" />
           </button>
 
