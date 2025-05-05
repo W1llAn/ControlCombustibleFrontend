@@ -1,80 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../api/config"; // Importa la configuración de Axios
 
-const useVehiculos = () => {
-  // Estado de la lista de vehículos
-  const [data, setData] = useState([
-    {
-      id: 1,
-      placa: "ABC123",
-      nombre_vehiculo: "Toyota Hilux",
-      descripcion: "Vehículo liviano para transporte urbano.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 80.5,
-      consumo_combustible_km: 5.2,
-      fecha_registro: "2024-12-01T10:00:00",
-      estado: "Activo",
-    },
-    {
-      id: 2,
-      placa: "XYZ789",
-      nombre_vehiculo: "Caterpillar 950M",
-      descripcion: "Cargadora pesada usada en obras viales.",
-      tipo_maquinaria: "Pesada",
-      estado_operativo: "Mantenimiento",
-      capacidad_combustible: 120.0,
-      consumo_combustible_km: 3.8,
-      fecha_registro: "2023-08-15T14:30:00",
-      estado: "Activo",
-    },
-    {
-      id: 3,
-      placa: "LMN456",
-      nombre_vehiculo: "Ford Ranger",
-      descripcion: "Camioneta liviana con uso en logística.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 65.0,
-      consumo_combustible_km: 6.1,
-      fecha_registro: "2025-01-10T08:45:00",
-      estado: "Eliminado",
-    },
-    {
-      id: 4,
-      placa: "DEF234",
-      nombre_vehiculo: "Volvo FMX",
-      descripcion: "Camión pesado para transporte de carga.",
-      tipo_maquinaria: "Pesada",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 150.2,
-      consumo_combustible_km: 4.3,
-      fecha_registro: "2022-05-20T11:15:00",
-      estado: "Activo",
-    },
-    {
-      id: 5,
-      placa: "GHI567",
-      nombre_vehiculo: "Nissan Frontier",
-      descripcion: "Vehículo de apoyo en operaciones de campo.",
-      tipo_maquinaria: "Liviana",
-      estado_operativo: "Mantenimiento",
-      capacidad_combustible: 70.0,
-      consumo_combustible_km: 5.0,
-      fecha_registro: "2023-11-25T09:00:00",
-      estado: "Activo",
-    },
-  ]);
+const useVehiculos = (toastRef) => {
+  // Estado de la lista de vehículos (formato interno del frontend)
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Estado del formulario
+  // Estado del formulario (formato interno)
   const [nuevoVehiculo, setNuevoVehiculo] = useState({
     placa: "",
-    nombre_vehiculo: "",
+    nombre: "",
     descripcion: "",
-    tipo_maquinaria: "",
-    estado_operativo: "Operativo",
-    capacidad_combustible: 0,
-    consumo_combustible_km: 0,
-    fecha_registro: null,
+    tipoMaquinaria: "",
+    estadoOperativo: "Operativo",
+    capacidadCombustible: 0,
+    consumoCombustibleKm: 0,
+    fechaRegistro: null,
     estado: "Activo",
   });
 
@@ -85,8 +26,9 @@ const useVehiculos = () => {
   const [detalleVisible, setDetalleVisible] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
   const [estadoOperativoMap, setEstadoOperativoMap] = useState({});
-  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
+  const [vehiculoToDelete, setVehiculoToDelete] = useState(null);
 
   // Opciones para los dropdowns
   const tiposMaquinaria = [
@@ -109,7 +51,7 @@ const useVehiculos = () => {
       placeholder: "Ej. ABC123",
     },
     {
-      id: "nombre_vehiculo",
+      id: "nombre",
       label: "Nombre del Vehículo",
       type: "text",
       required: true,
@@ -123,7 +65,7 @@ const useVehiculos = () => {
       placeholder: "Ej. Vehículo para transporte urbano",
     },
     {
-      id: "tipo_maquinaria",
+      id: "tipoMaquinaria",
       label: "Tipo de Maquinaria",
       type: "dropdown",
       required: true,
@@ -131,7 +73,7 @@ const useVehiculos = () => {
       placeholder: "Seleccione un tipo",
     },
     {
-      id: "estado_operativo",
+      id: "estadoOperativo",
       label: "Estado Operativo",
       type: "dropdown",
       required: true,
@@ -139,119 +81,250 @@ const useVehiculos = () => {
       placeholder: "Seleccione un estado",
     },
     {
-      id: "capacidad_combustible",
+      id: "capacidadCombustible",
       label: "Capacidad de Combustible (litros)",
       type: "number",
       required: true,
       min: 0,
     },
     {
-      id: "consumo_combustible_km",
+      id: "consumoCombustibleKm",
       label: "Consumo de Combustible (km/l)",
       type: "number",
       required: true,
       min: 0,
     },
     {
-      id: "fecha_registro",
+      id: "fechaRegistro",
       label: "Fecha de Registro",
       type: "date",
       required: true,
     },
   ];
 
+  // Convierte datos de la API al formato interno
+  const toInternalFormat = (apiData) => ({
+    id: apiData.id,
+    placa: apiData.placa,
+    nombre: apiData.nombre,
+    descripcion: apiData.descripcion,
+    tipoMaquinaria: apiData.tipoMaquinaria,
+    estadoOperativo: apiData.estadoOperativo,
+    capacidadCombustible: apiData.capacidadCombustible,
+    consumoCombustibleKm: apiData.consumoCombustibleKm,
+    fechaRegistro: apiData.fechaRegistro
+      ? new Date(apiData.fechaRegistro)
+      : null,
+    estado: apiData.estado,
+  });
+
+  // Convierte datos internos al formato de la API
+  const toApiFormat = (internalData) => ({
+    id: internalData.id || 0,
+    placa: internalData.placa,
+    nombre: internalData.nombre,
+    descripcion: internalData.descripcion,
+    tipoMaquinaria: internalData.tipoMaquinaria,
+    estadoOperativo: internalData.estadoOperativo,
+    capacidadCombustible: internalData.capacidadCombustible,
+    consumoCombustibleKm: internalData.consumoCombustibleKm,
+    fechaRegistro: internalData.fechaRegistro
+      ? internalData.fechaRegistro.toISOString()
+      : new Date().toISOString(),
+    estado: internalData.estado,
+  });
+
+  // Cargar vehículos al montar el componente
+  const fetchVehicles = async () => {
+    try {
+      const response = await api.get("/vehiculos/listar");
+      const sortedData = response.data
+        .map(toInternalFormat)
+        .sort((a, b) => new Date(b.fechaRegistro) - new Date(a.fechaRegistro));
+      setData(sortedData);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error al cargar los vehículos:", err);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail:
+          "No se pudieron cargar los vehículos. Verifica la conexión con el servidor.",
+        life: 3000,
+      });
+      setLoading(false);
+      // Datos de respaldo
+    }
+  };
+
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
+
   // Validaciones del formulario
   const validateForm = () => {
-    const newErrors = {};
+    const validationErrors = [];
 
     if (!nuevoVehiculo.placa || nuevoVehiculo.placa.length < 3) {
-      newErrors.placa = "La placa debe tener al menos 3 caracteres";
+      validationErrors.push("La placa debe tener al menos 3 caracteres");
     }
 
-    if (!nuevoVehiculo.nombre_vehiculo) {
-      newErrors.nombre_vehiculo = "El nombre del vehículo es obligatorio";
+    if (!nuevoVehiculo.nombre) {
+      validationErrors.push("El nombre del vehículo es obligatorio");
     }
 
-    if (!nuevoVehiculo.tipo_maquinaria) {
-      newErrors.tipo_maquinaria = "Seleccione un tipo de maquinaria";
+    if (!nuevoVehiculo.tipoMaquinaria) {
+      validationErrors.push("Seleccione un tipo de maquinaria");
     }
 
-    if (nuevoVehiculo.capacidad_combustible <= 0) {
-      newErrors.capacidad_combustible = "La capacidad debe ser mayor a 0";
+    if (nuevoVehiculo.capacidadCombustible <= 0) {
+      validationErrors.push("La capacidad de combustible debe ser mayor a 0");
     }
 
-    if (nuevoVehiculo.consumo_combustible_km <= 0) {
-      newErrors.consumo_combustible_km = "El consumo debe ser mayor a 0";
+    if (nuevoVehiculo.consumoCombustibleKm <= 0) {
+      validationErrors.push("El consumo de combustible debe ser mayor a 0");
     }
 
-    if (!nuevoVehiculo.fecha_registro) {
-      newErrors.fecha_registro = "La fecha de registro es obligatoria";
+    if (!nuevoVehiculo.fechaRegistro) {
+      validationErrors.push("La fecha de registro es obligatoria");
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (validationErrors.length > 0) {
+      toastRef.current.show({
+        severity: "warn",
+        summary: "Advertencia",
+        detail: `Errores en el formulario:\n- ${validationErrors.join("\n- ")}`,
+        life: 5000,
+      });
+      return false;
+    }
+
+    return true;
   };
 
   // Maneja el cambio de estado operativo
-  const handleEstadoChange = (id, value) => {
+  const handleEstadoChange = async (id, value) => {
     setEstadoOperativoMap((prev) => ({
       ...prev,
       [id]: value,
     }));
-    setData((prev) =>
-      prev.map((vehiculo) =>
-        vehiculo.id === id
-          ? {
-              ...vehiculo,
-              estado_operativo: value ? "Operativo" : "Mantenimiento",
-            }
-          : vehiculo
-      )
-    );
+    const updatedVehicle = {
+      ...data.find((v) => v.id === id),
+      estadoOperativo: value ? "Operativo" : "Mantenimiento",
+    };
+    try {
+      await api.put("/vehiculos/actualizar", toApiFormat(updatedVehicle));
+      setData((prev) =>
+        prev.map((vehiculo) => (vehiculo.id === id ? updatedVehicle : vehiculo))
+      );
+      toastRef.current.show({
+        severity: "success",
+        summary: "Éxito",
+        detail: "Estado operativo actualizado correctamente",
+        life: 3000,
+      });
+    } catch (err) {
+      console.error("Error al actualizar el estado operativo:", err);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo actualizar el estado operativo",
+        life: 3000,
+      });
+    }
   };
 
   // Abre el modal para crear un nuevo vehículo
   const handleNuevoVehiculo = () => {
     setNuevoVehiculo({
       placa: "",
-      nombre_vehiculo: "",
+      nombre: "",
       descripcion: "",
-      tipo_maquinaria: "",
-      estado_operativo: "Operativo",
-      capacidad_combustible: 0,
-      consumo_combustible_km: 0,
-      fecha_registro: null,
+      tipoMaquinaria: "",
+      estadoOperativo: "Operativo",
+      capacidadCombustible: 0,
+      consumoCombustibleKm: 0,
+      fechaRegistro: null,
       estado: "Activo",
     });
     setVehiculoSeleccionado(null);
     setIsEditing(false);
-    setErrors({});
     setModalVisible(true);
   };
 
   // Abre el modal para editar un vehículo
-  const handleEdit = (vehiculo) => {
-    setNuevoVehiculo({
-      ...vehiculo,
-      fecha_registro: vehiculo.fecha_registro
-        ? new Date(vehiculo.fecha_registro)
-        : null,
-    });
-    setVehiculoSeleccionado(vehiculo);
-    setIsEditing(true);
-    setErrors({});
-    setModalVisible(true);
+  const handleEdit = async (vehiculo) => {
+    try {
+      const response = await api.get(`/vehiculos/${vehiculo.id}`);
+      setNuevoVehiculo(toInternalFormat(response.data));
+      setVehiculoSeleccionado(toInternalFormat(response.data));
+      setIsEditing(true);
+      setModalVisible(true);
+    } catch (err) {
+      console.error("Error al cargar los datos del vehículo:", err);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudieron cargar los datos del vehículo",
+        life: 3000,
+      });
+    }
   };
 
-  // Elimina un vehículo
+  // Inicia el proceso de eliminación mostrando el ConfirmDialog
   const handleDelete = (vehiculo) => {
-    setData((prev) => prev.filter((v) => v.id !== vehiculo.id));
+    setVehiculoToDelete(vehiculo);
+    setConfirmDialogVisible(true);
+  };
+
+  // Confirma la eliminación del vehículo
+  const confirmDelete = async () => {
+    if (!vehiculoToDelete) return;
+
+    try {
+      await api.delete(`/vehiculos/eliminar/${vehiculoToDelete.id}`);
+      setData((prev) => prev.filter((v) => v.id !== vehiculoToDelete.id));
+      toastRef.current.show({
+        severity: "success",
+        summary: "Éxito",
+        detail: "Vehículo eliminado correctamente",
+        life: 3000,
+      });
+    } catch (err) {
+      console.error("Error al eliminar el vehículo:", err);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo eliminar el vehículo",
+        life: 3000,
+      });
+    } finally {
+      setConfirmDialogVisible(false);
+      setVehiculoToDelete(null);
+    }
+  };
+
+  // Cancela la eliminación
+  const cancelDelete = () => {
+    setConfirmDialogVisible(false);
+    setVehiculoToDelete(null);
   };
 
   // Muestra los detalles de un vehículo
-  const handleVerDetalles = (vehiculo) => {
-    setVehiculoSeleccionado(vehiculo);
-    setDetalleVisible(true);
+  const handleVerDetalles = async (vehiculo) => {
+    try {
+      const response = await api.get(`/vehiculos/${vehiculo.id}`);
+      setVehiculoSeleccionado(toInternalFormat(response.data));
+      setDetalleVisible(true);
+    } catch (err) {
+      console.error("Error al cargar los detalles del vehículo:", err);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudieron cargar los detalles del vehículo",
+        life: 3000,
+      });
+    }
   };
 
   // Cierra el modal
@@ -259,7 +332,6 @@ const useVehiculos = () => {
     setModalVisible(false);
     setVehiculoSeleccionado(null);
     setIsEditing(false);
-    setErrors({});
   };
 
   // Cierra el modal de detalles
@@ -276,26 +348,48 @@ const useVehiculos = () => {
 
     setIsSubmitting(true);
     try {
-      const vehicleData = {
-        ...nuevoVehiculo,
-        id: isEditing ? nuevoVehiculo.id : Date.now(), // ID temporal para datos locales
-        fecha_registro: nuevoVehiculo.fecha_registro.toISOString(),
-      };
+      const vehicleData = toApiFormat(nuevoVehiculo);
 
       if (isEditing) {
-        // Editar vehículo existente
-        setData((prev) =>
-          prev.map((v) => (v.id === vehicleData.id ? vehicleData : v))
+        // Editar vehículo
+        const response = await api.put(
+          "/vehiculos/actualizar",
+          vehicleData,
+          {}
         );
+        setData((prev) =>
+          prev.map((v) =>
+            v.id === vehicleData.id ? toInternalFormat(response.data) : v
+          )
+        );
+        toastRef.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Vehículo actualizado correctamente",
+          life: 3000,
+        });
+        fetchVehicles(); // Recargar la lista de vehículos
       } else {
-        // Crear nuevo vehículo
-        setData((prev) => [...prev, vehicleData]);
+        // Crear vehículo
+        const response = await api.post("/vehiculos/crear", vehicleData);
+        setData((prev) => [...prev, toInternalFormat(response.data)]);
+        toastRef.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Vehículo creado correctamente",
+          life: 3000,
+        });
+        fetchVehicles();
       }
       handleCancel();
     } catch (error) {
-      console.log(error);
-
-      setErrors({ submit: "Error al guardar el vehículo" });
+      console.error("Error al guardar el vehículo:", error);
+      toastRef.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo guardar el vehículo",
+        life: 3000,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -303,6 +397,7 @@ const useVehiculos = () => {
 
   return {
     data,
+    loading,
     modalVisible,
     setModalVisible,
     globalFilter,
@@ -313,8 +408,9 @@ const useVehiculos = () => {
     nuevoVehiculo,
     setNuevoVehiculo,
     formFields,
-    errors,
     isSubmitting,
+    confirmDialogVisible,
+    vehiculoToDelete,
     tiposMaquinaria,
     estadosOperativos,
     estadoOperativoMap,
@@ -322,6 +418,8 @@ const useVehiculos = () => {
     handleNuevoVehiculo,
     handleEdit,
     handleDelete,
+    confirmDelete,
+    cancelDelete,
     handleVerDetalles,
     handleCancel,
     handleGuardarVehiculo,

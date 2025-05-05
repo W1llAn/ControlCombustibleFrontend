@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import DataTableGenerico from "../components/DataTableGenerico";
 import getBadgeClassType from "../utils/badges";
 import {
@@ -17,8 +17,11 @@ import FormularioGenerico from "../components/FormularioGenerico";
 import ModalFormulario from "../components/ModalFormulario";
 import VehiculoDetalles from "../components/VehiculoDetalles";
 import useVehiculos from "../hooks/useVehiculos";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 function Vehiculos() {
+  const toast = useRef(null);
   const {
     data,
     modalVisible,
@@ -30,18 +33,21 @@ function Vehiculos() {
     nuevoVehiculo,
     setNuevoVehiculo,
     formFields,
-    errors,
     isSubmitting,
+    confirmDialogVisible,
+    vehiculoToDelete,
     estadoOperativoMap,
     handleEstadoChange,
     handleNuevoVehiculo,
     handleEdit,
     handleDelete,
+    confirmDelete,
+    cancelDelete,
     handleVerDetalles,
     handleCancel,
     handleGuardarVehiculo,
     handleCerrarDetalles,
-  } = useVehiculos();
+  } = useVehiculos(toast);
 
   const columns = [
     {
@@ -54,30 +60,30 @@ function Vehiculos() {
       sortable: false,
     },
     {
-      field: "nombre_vehiculo",
+      field: "nombre",
       header: (
         <div className="flex items-center gap-2">
           <IconoNombreVehiculo /> Nombre
         </div>
       ),
-      sortable: false,
+      sortable: true,
     },
     {
-      field: "tipo_maquinaria",
+      field: "tipoMaquinaria",
       header: (
         <div className="flex items-center gap-2">
           <IconoTipoMaquinaria /> Tipo de Maquinaria
         </div>
       ),
-      sortable: false,
+      sortable: true,
       body: (data) => (
-        <span className={getBadgeClassType(data.tipo_maquinaria)}>
-          {data.tipo_maquinaria}
+        <span className={getBadgeClassType(data.tipoMaquinaria)}>
+          {data.tipoMaquinaria}
         </span>
       ),
     },
     {
-      field: "capacidad_combustible",
+      field: "capacidadCombustible",
       header: (
         <div className="flex items-center gap-2">
           <IconoCombustible /> Capacidad Combustible
@@ -86,7 +92,7 @@ function Vehiculos() {
       sortable: false,
     },
     {
-      field: "estado_operativo",
+      field: "estadoOperativo",
       header: (
         <div className="flex items-center gap-2">
           <IconoEstado /> Estado Operativo
@@ -95,7 +101,7 @@ function Vehiculos() {
       body: (rowData) => {
         const isChecked =
           estadoOperativoMap[rowData.id] ??
-          rowData.estado_operativo === "Operativo";
+          rowData.estadoOperativo === "Operativo";
 
         return (
           <div className="flex items-center gap-2 flex-col">
@@ -150,6 +156,18 @@ function Vehiculos() {
 
   return (
     <section className="py-6 px-4">
+      <Toast ref={toast} />
+      <ConfirmDialog
+        visible={confirmDialogVisible}
+        onHide={cancelDelete}
+        message={`¿Estás seguro de que deseas eliminar el vehículo "${vehiculoToDelete?.nombre}"?`}
+        header="Confirmar Eliminación"
+        icon="pi pi-exclamation-triangle"
+        accept={confirmDelete}
+        reject={cancelDelete}
+        acceptLabel="Sí, eliminar"
+        rejectLabel="Cancelar"
+      />
       <div className="flex flex-row justify-between">
         <h1 className="text-3xl font-bold">Gestión de Vehículos</h1>
         <Boton
@@ -158,6 +176,7 @@ function Vehiculos() {
           onClick={handleNuevoVehiculo}
         />
       </div>
+
       <DataTableGenerico
         data={data}
         columns={columns}
@@ -178,11 +197,6 @@ function Vehiculos() {
             setNuevoVehiculo({ ...nuevoVehiculo, [field]: value })
           }
         />
-        {Object.keys(errors).length > 0 && (
-          <div className="text-red-500 text-sm mt-2">
-            {errors.submit || "Por favor, corrige los errores en el formulario"}
-          </div>
-        )}
       </ModalFormulario>
       <VehiculoDetalles
         visible={detalleVisible}
