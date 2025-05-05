@@ -257,7 +257,7 @@ const useVehiculos = (toastRef) => {
     try {
       const response = await api.get(`/vehiculos/${vehiculo.id}`);
       setNuevoVehiculo(toInternalFormat(response.data));
-      setVehiculoSeleccionado(response.data);
+      setVehiculoSeleccionado(toInternalFormat(response.data));
       setIsEditing(true);
       setModalVisible(true);
     } catch (err) {
