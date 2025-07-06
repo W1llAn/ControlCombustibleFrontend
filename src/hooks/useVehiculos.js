@@ -137,7 +137,7 @@ const useVehiculos = (toastRef) => {
   // Cargar vehículos al montar el componente
   const fetchVehicles = async () => {
     try {
-      const response = await api.get("/vehiculos/listar");
+      const response = await api.get("/Vehiculos/listar");
       const sortedData = response.data
         .map(toInternalFormat)
         .sort((a, b) => new Date(b.fechaRegistro) - new Date(a.fechaRegistro));
@@ -255,7 +255,7 @@ const useVehiculos = (toastRef) => {
   // Abre el modal para editar un vehículo
   const handleEdit = async (vehiculo) => {
     try {
-      const response = await api.get(`/vehiculos/${vehiculo.id}`);
+      const response = await api.get(`/Vehiculos/${vehiculo.id}`);
       setNuevoVehiculo(toInternalFormat(response.data));
       setVehiculoSeleccionado(toInternalFormat(response.data));
       setIsEditing(true);
@@ -282,7 +282,7 @@ const useVehiculos = (toastRef) => {
     if (!vehiculoToDelete) return;
 
     try {
-      await api.delete(`/vehiculos/eliminar/${vehiculoToDelete.id}`);
+      await api.delete(`/Vehiculos/eliminar/${vehiculoToDelete.id}`);
       setData((prev) => prev.filter((v) => v.id !== vehiculoToDelete.id));
       toastRef.current.show({
         severity: "success",
@@ -313,7 +313,7 @@ const useVehiculos = (toastRef) => {
   // Muestra los detalles de un vehículo
   const handleVerDetalles = async (vehiculo) => {
     try {
-      const response = await api.get(`/vehiculos/${vehiculo.id}`);
+      const response = await api.get(`/Vehiculos/${vehiculo.id}`);
       setVehiculoSeleccionado(toInternalFormat(response.data));
       setDetalleVisible(true);
     } catch (err) {
@@ -371,7 +371,7 @@ const useVehiculos = (toastRef) => {
         fetchVehicles(); // Recargar la lista de vehículos
       } else {
         // Crear vehículo
-        const response = await api.post("/vehiculos/crear", vehicleData);
+        const response = await api.post("/Vehiculos/crear", vehicleData);
         setData((prev) => [...prev, toInternalFormat(response.data)]);
         toastRef.current.show({
           severity: "success",
