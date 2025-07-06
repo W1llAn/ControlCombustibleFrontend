@@ -14,9 +14,19 @@ import IconoPlaca from "./IconoPlaca";
 import IconoCombustible from "./IconoCombustible";
 import IconoTipoMaquinaria from "./IconoTipoMaquinaria";
 import IconoEstado from "./IconoEstado";
+import IconoDistancia from "./IconoDistancia";
+import IconoLocation from "./IconoLocation";
+import IconoComsumoCombsutible from "./IconoConsumoCombustible";
+import IconoAsignacionRuta from "./IconoAsgnacionRuta";
+import IconoGasolina from "./IconoGasolina";
 export {
   IconoEmpleados,
+  IconoDistancia,
+  IconoLocation,
   IconoReportes,
+  IconoComsumoCombsutible,
+  IconoAsignacionRuta,
+  IconoGasolina,
   IconoUsuarios,
   IconoPerfil,
   IconoCerrarSesion,
