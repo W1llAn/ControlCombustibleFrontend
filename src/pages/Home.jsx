@@ -8,6 +8,7 @@ import {
   IconoVehiculos,
 } from "../assets/IconosComponentes";
 import Vehiculos from "./Vehiculos";
+import Rutas from "./Rutas";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
@@ -68,6 +69,8 @@ const Home = () => {
     switch (activeSection) {
       case "vehiculos":
         return <Vehiculos />;
+      case "rutas":
+        return <Rutas />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
