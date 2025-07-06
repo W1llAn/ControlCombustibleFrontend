@@ -32,6 +32,16 @@ const Login = () => {
       });
 
       const token = response.data.token;
+      if (!token) {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Usuario no existente",
+          life: 3000,
+        });
+        return 0;
+      }
+
       localStorage.setItem("jwtToken", token);
 
       toast.current.show({
