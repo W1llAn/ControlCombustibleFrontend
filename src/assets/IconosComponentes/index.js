@@ -14,6 +14,7 @@ import IconoPlaca from "./IconoPlaca";
 import IconoCombustible from "./IconoCombustible";
 import IconoTipoMaquinaria from "./IconoTipoMaquinaria";
 import IconoEstado from "./IconoEstado";
+import IconoPersona from "./IconoPersona";
 export {
   IconoEmpleados,
   IconoReportes,
@@ -31,4 +32,5 @@ export {
   IconoCombustible,
   IconoTipoMaquinaria,
   IconoEstado,
+  IconoPersona,
 };
