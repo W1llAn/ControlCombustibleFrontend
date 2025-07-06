@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { Password } from "primereact/password";
 import { jwtDecode } from "jwt-decode";
-import Boton from "../Components/Boton";
+import Boton from "../components/Boton";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

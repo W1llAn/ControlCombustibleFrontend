@@ -14,11 +14,13 @@ import IconoPlaca from "./IconoPlaca";
 import IconoCombustible from "./IconoCombustible";
 import IconoTipoMaquinaria from "./IconoTipoMaquinaria";
 import IconoEstado from "./IconoEstado";
+import IconoPersona from "./IconoPersona";
 import IconoDistancia from "./IconoDistancia";
 import IconoLocation from "./IconoLocation";
 import IconoComsumoCombsutible from "./IconoConsumoCombustible";
 import IconoAsignacionRuta from "./IconoAsgnacionRuta";
 import IconoGasolina from "./IconoGasolina";
+
 export {
   IconoEmpleados,
   IconoDistancia,
@@ -41,4 +43,5 @@ export {
   IconoCombustible,
   IconoTipoMaquinaria,
   IconoEstado,
+  IconoPersona,
 };
