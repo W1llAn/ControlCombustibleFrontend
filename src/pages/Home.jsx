@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import Choferes from "./Choferes";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
@@ -68,6 +69,8 @@ const Home = () => {
     switch (activeSection) {
       case "vehiculos":
         return <Vehiculos />;
+      case "choferes":
+        return <Choferes />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
@@ -86,7 +89,8 @@ const Home = () => {
           style={{
             backgroundImage:
               "linear-gradient(to left, rgba(78, 89, 246), #725AC1)",
-          }}>
+          }}
+        >
           Control Combustibles XYZ
         </span>
       </a>
@@ -101,7 +105,8 @@ const Home = () => {
             }}
             className={`${baseLinkClasses} ${
               activeSection === key ? "bg-hover-gray text-gray-700" : ""
-            }`}>
+            }`}
+          >
             <span className="mx-2">{icon}</span>
             <span className="mx-4 font-semibold">{label}</span>
           </div>
@@ -110,7 +115,8 @@ const Home = () => {
 
       <div
         onClick={handleLogout} // Usar la nueva función aquí
-        className={`${baseLinkClasses} items-center justify-center mt-auto`}>
+        className={`${baseLinkClasses} items-center justify-center mt-auto`}
+      >
         <IconoCerrarSesion />
         <span className="mx-4 font-medium">Cerrar Sesión</span>
       </div>
@@ -130,13 +136,15 @@ const Home = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-[rgba(0,0,0,0.22)] z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}></div>
+          onClick={() => setSidebarOpen(false)}
+        ></div>
       )}
 
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-bg-primary p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden`}>
+        } transition-transform duration-300 ease-in-out md:hidden`}
+      >
         <SidebarContent />
       </div>
 
@@ -147,7 +155,8 @@ const Home = () => {
           {/* Menú móvil */}
           <button
             className="md:hidden text-2xl text-gray-700 z-40"
-            onClick={() => setSidebarOpen(!sidebarOpen)}>
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
             <i className="pi pi-bars" />
           </button>
 
