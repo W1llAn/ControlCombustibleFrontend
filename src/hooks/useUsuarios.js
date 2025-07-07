@@ -3,8 +3,7 @@ import api from "../api/config";
 import { Toast } from "primereact/toast";
 
 // Asumimos que el ID del usuario autenticado está disponible (puedes reemplazar esto con tu mecanismo real)
-const authUserId = 1;
-const useUsuarios = (toastRef) => {
+const useUsuarios = (toastRef, authUserId) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -190,7 +189,7 @@ const useUsuarios = (toastRef) => {
 
   const handleDelete = (usuario) => {
     // Verificar si el usuario es el autenticado
-    if (usuario.id === authUserId) {
+    if (usuario.id == authUserId.idUsuario) {
       toastRef.current.show({
         severity: "error",
         summary: "Error",
@@ -207,7 +206,7 @@ const useUsuarios = (toastRef) => {
     if (!usuarioToDelete) return;
 
     try {
-      await api.delete(`/Usuarios/eliminar/${usuarioToDelete.id}`);
+      await api.delete(`/Usuarios/borrar/${usuarioToDelete.id}`);
       setData((prev) => prev.filter((u) => u.id !== usuarioToDelete.id));
       toastRef.current.show({
         severity: "success",

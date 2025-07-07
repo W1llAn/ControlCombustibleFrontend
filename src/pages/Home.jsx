@@ -26,6 +26,7 @@ import Usuarios from "./Usuarios";
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [idUsuario, setIdUsuario] = useState("");
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -34,7 +35,9 @@ const Home = () => {
     if (!token) return false;
     try {
       const decode = jwtDecode(token);
-      let rolUsuario = decode.Rol; // Asumiendo que el campo en el JWT es 'Rol'
+
+      let rolUsuario = decode.Rol;
+      // Asumiendo que el campo en el JWT es 'Rol'
       switch (rolUsuario) {
         case "Administrador":
           return true;
@@ -90,7 +93,8 @@ const Home = () => {
     } else {
       try {
         const decode = jwtDecode(token);
-        const rolUsuario = decode.Rol; // Asumiendo que el campo en el JWT es 'Rol'
+        const rolUsuario = decode.Rol;
+        setIdUsuario(decode.idUsuario); // Asumiendo que el campo en el JWT es 'Rol'// Asumiendo que el campo en el JWT es 'id'
         if (rolUsuario === "Supervisor") {
           setActiveSection("consumoCombustible");
         } else if (rolUsuario === "Operador") {
@@ -144,7 +148,7 @@ const Home = () => {
       case "reportes":
         return <Reportes />;
       case "usuarios":
-        return <Usuarios />;
+        return <Usuarios idUsuario={idUsuario} />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
@@ -163,7 +167,8 @@ const Home = () => {
           style={{
             backgroundImage:
               "linear-gradient(to left, rgba(78, 89, 246), #725AC1)",
-          }}>
+          }}
+        >
           Control Combustibles XYZ
         </span>
       </a>
@@ -180,7 +185,8 @@ const Home = () => {
                 }}
                 className={`${baseLinkClasses} ${
                   activeSection === key ? "bg-hover-gray text-gray-700" : ""
-                }`}>
+                }`}
+              >
                 <span className="mx-2">{icon}</span>
                 <span className="mx-4 font-semibold">{label}</span>
               </div>
@@ -190,7 +196,8 @@ const Home = () => {
 
       <div
         onClick={handleLogout}
-        className={`${baseLinkClasses} items-center justify-center mt-auto`}>
+        className={`${baseLinkClasses} items-center justify-center mt-auto`}
+      >
         <IconoCerrarSesion />
         <span className="mx-4 font-medium">Cerrar Sesión</span>
       </div>
@@ -210,13 +217,15 @@ const Home = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-[rgba(0,0,0,0.22)] z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}></div>
+          onClick={() => setSidebarOpen(false)}
+        ></div>
       )}
 
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-bg-primary p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden`}>
+        } transition-transform duration-300 ease-in-out md:hidden`}
+      >
         <SidebarContent />
       </div>
 
@@ -227,7 +236,8 @@ const Home = () => {
           {/* Menú móvil */}
           <button
             className="md:hidden text-2xl text-gray-700 Nuance z-40"
-            onClick={() => setSidebarOpen(!sidebarOpen)}>
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
             <i className="pi pi-bars" />
           </button>
 
