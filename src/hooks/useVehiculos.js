@@ -119,23 +119,42 @@ const useVehiculos = (toastRef) => {
   });
 
   // Convierte datos internos al formato de la API
-  const toApiFormat = (internalData) => ({
-    id: internalData.id || 0,
-    placa: internalData.placa,
-    nombre: internalData.nombre,
-    descripcion: internalData.descripcion,
-    tipoMaquinaria: internalData.tipoMaquinaria,
-    estadoOperativo: internalData.estadoOperativo,
-    capacidadCombustible: internalData.capacidadCombustible,
-    consumoCombustibleKm: internalData.consumoCombustibleKm,
-    fechaRegistro: internalData.fechaRegistro
-      ? internalData.fechaRegistro.toISOString()
-      : new Date().toISOString(),
-    estado: internalData.estado,
-  });
+  // Convierte datos internos al formato de la API
+  const toApiFormat = (
+    internalData,
+    isEditing = false,
+    originalTipoMaquinaria = null
+  ) => {
+    const baseData = {
+      id: internalData.id || 0,
+      placa: internalData.placa,
+      nombre: internalData.nombre,
+      descripcion: internalData.descripcion,
+      tipoMaquinaria: internalData.tipoMaquinaria,
+      estadoOperativo: internalData.estadoOperativo,
+      capacidadCombustible: internalData.capacidadCombustible,
+      consumoCombustibleKm: internalData.consumoCombustibleKm,
+      fechaRegistro: internalData.fechaRegistro
+        ? internalData.fechaRegistro.toISOString()
+        : new Date().toISOString(),
+      estado: internalData.estado,
+    };
+
+    // Incluir tipoMaquinariaAnterior solo en modo edición
+    if (isEditing && originalTipoMaquinaria) {
+      return {
+        ...baseData,
+        tipoMaquinariaAnterior: originalTipoMaquinaria,
+      };
+    }
+
+    return baseData;
+  };
 
   // Cargar vehículos al montar el componente
   const fetchVehicles = async () => {
+    console.log("Fetching vehicles from API...");
+
     try {
       const response = await api.get("/Vehiculos/listar");
       const sortedData = response.data
@@ -208,12 +227,14 @@ const useVehiculos = (toastRef) => {
       ...prev,
       [id]: value,
     }));
+    const vehicle = data.find((v) => v.id === id);
     const updatedVehicle = {
-      ...data.find((v) => v.id === id),
+      ...vehicle,
       estadoOperativo: value ? "Operativo" : "Mantenimiento",
     };
     try {
-      await api.put("/vehiculos/actualizar", toApiFormat(updatedVehicle));
+      const payload = toApiFormat(updatedVehicle, true, vehicle.tipoMaquinaria);
+      await api.put("/Vehiculos/actualizar", payload);
       setData((prev) =>
         prev.map((vehiculo) => (vehiculo.id === id ? updatedVehicle : vehiculo))
       );
@@ -223,6 +244,7 @@ const useVehiculos = (toastRef) => {
         detail: "Estado operativo actualizado correctamente",
         life: 3000,
       });
+      await fetchVehicles();
     } catch (err) {
       console.error("Error al actualizar el estado operativo:", err);
       toastRef.current.show({
@@ -259,10 +281,12 @@ const useVehiculos = (toastRef) => {
       const response = await api.get(
         `/Vehiculos/${tipoMaquinaria}/${vehiculo.id}`
       );
-      setNuevoVehiculo(toInternalFormat(response.data));
-      setVehiculoSeleccionado(toInternalFormat(response.data));
+      const vehiculoData = toInternalFormat(response.data);
+      setNuevoVehiculo(vehiculoData);
+      setVehiculoSeleccionado(vehiculoData);
       setIsEditing(true);
       setModalVisible(true);
+      await fetchVehicles(); // Recargar la lista de vehículos
     } catch (err) {
       console.error("Error al cargar los datos del vehículo:", err);
       toastRef.current.show({
@@ -356,7 +380,11 @@ const useVehiculos = (toastRef) => {
 
     setIsSubmitting(true);
     try {
-      const vehicleData = toApiFormat(nuevoVehiculo);
+      const vehicleData = toApiFormat(
+        nuevoVehiculo,
+        isEditing,
+        isEditing ? vehiculoSeleccionado?.tipoMaquinaria : null
+      );
 
       if (isEditing) {
         // Editar vehículo

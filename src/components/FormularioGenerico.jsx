@@ -26,7 +26,8 @@ const FormularioGenerico = ({ fields, formData, onChange }) => {
             <div key={field.name} className={`p-field w-full ${field.colSize}`}>
               <label
                 htmlFor={field.name}
-                className="block text-sm font-semibold text-gray-700 mb-1">
+                className="block text-sm font-semibold text-gray-700 mb-1"
+              >
                 {field.label}{" "}
                 {field.required && <span className="text-red-500">*</span>}
               </label>

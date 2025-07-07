@@ -30,11 +30,16 @@ const FormularioAsignarRuta = ({ fields, formData, onChange }) => {
                 id={field.id}
                 value={formData[field.id]}
                 options={field.options}
-                onChange={(e) => handleChange(field.id, e.value)}
+                onChange={(e) => {
+                  handleChange(field.id, e.value);
+                  if (field.onChange) {
+                    field.onChange(e.value);
+                  }
+                }}
                 placeholder={field.placeholder}
                 required={field.required}
                 className="w-full"
-                data-testid={`form-field-${field.id}`} // Agregamos data-testid
+                data-testid={`form-field-${field.id}`}
               />
             ) : field.type === "number" ? (
               <InputNumber
@@ -47,7 +52,7 @@ const FormularioAsignarRuta = ({ fields, formData, onChange }) => {
                 min={field.min}
                 required={field.required}
                 className="w-full"
-                data-testid={`form-field-${field.id}`} // Agregamos data-testid
+                data-testid={`form-field-${field.id}`}
               />
             ) : field.type === "date" ? (
               <Calendar
@@ -56,14 +61,15 @@ const FormularioAsignarRuta = ({ fields, formData, onChange }) => {
                 onChange={(e) => handleChange(field.id, e.value)}
                 showIcon
                 required={field.required}
-                className="w-full"
-                dateFormat="dd-mm-yy"
-                maxDate={new Date()} // fecha máxima es hoy
+                className="w-full p-inputtext-sm"
+                dateFormat="dd/mm/yy"
                 minDate={
                   new Date(
                     new Date().setFullYear(new Date().getFullYear() - 180)
                   )
                 }
+                disabled={field.disabled}
+                data-testid={`form-field-${field.id}`}
               />
             ) : field.type === "onlyNumberText" ? (
               <InputText
@@ -72,6 +78,7 @@ const FormularioAsignarRuta = ({ fields, formData, onChange }) => {
                 onChange={(e) => handleOnlyNumberInput(e, field.id)}
                 required={field.required}
                 className="w-full"
+                data-testid={`form-field-${field.id}`}
               />
             ) : (
               <InputText
@@ -80,7 +87,7 @@ const FormularioAsignarRuta = ({ fields, formData, onChange }) => {
                 onChange={(e) => handleChange(field.id, e.target.value)}
                 required={field.required}
                 className="w-full"
-                data-testid={`form-field-${field.id}`} // Agregamos data-testid
+                data-testid={`form-field-${field.id}`}
               />
             )}
           </div>

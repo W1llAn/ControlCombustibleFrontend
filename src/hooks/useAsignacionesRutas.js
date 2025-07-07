@@ -19,7 +19,7 @@ const useAsignacionesRutas = (toastRef) => {
   const [filteredVehiculos, setFilteredVehiculos] = useState([]);
 
   const [nuevaAsignacion, setNuevaAsignacion] = useState({
-    fechaAsignacion: new Date().toISOString().split("T")[0],
+    fechaAsignacion: new Date(),
     estado: "Pendiente",
     choferId: null,
     vehiculoId: null,
@@ -135,16 +135,32 @@ const useAsignacionesRutas = (toastRef) => {
     },
   });
 
-  const toApiFormat = (internalData) => ({
-    id: internalData.id || 0,
-    fechaAsignacion: internalData.fechaAsignacion
-      ? new Date(internalData.fechaAsignacion).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0],
-    estado: internalData.estado === "Pendiente" ? 1 : 0,
-    choferId: internalData.choferId,
-    vehiculoId: internalData.vehiculoId,
-    rutaId: internalData.rutaId,
-  });
+  const toApiFormat = (
+    internalData,
+    isEditing = false,
+    originalChoferId = null
+  ) => {
+    const baseData = {
+      id: internalData.id || 0,
+      fechaAsignacion: internalData.fechaAsignacion
+        ? new Date(internalData.fechaAsignacion).toISOString().split("T")[0]
+        : null, // No usar fecha actual como fallback
+      estado: internalData.estado === "Pendiente" ? 1 : 0,
+      choferId: internalData.choferId,
+      vehiculoId: internalData.vehiculoId,
+      rutaId: internalData.rutaId,
+    };
+
+    // Incluir choferIdAnterior solo en modo edición
+    if (isEditing && originalChoferId !== null) {
+      return {
+        ...baseData,
+        choferIdAnterior: originalChoferId,
+      };
+    }
+
+    return baseData;
+  };
 
   // Filtrar vehículos según el tipo de maquinaria del chofer
   const handleChoferChange = (choferId) => {
@@ -308,7 +324,9 @@ const useAsignacionesRutas = (toastRef) => {
     if (!asignacionToDelete) return;
 
     try {
-      await api.delete(`/AsignacionRutas/eliminar/${asignacionToDelete.id}`);
+      await api.delete(
+        `/AsignacionRutas/eliminar/${asignacionToDelete.vehiculo.tipoMaquinaria}/${asignacionToDelete.id}`
+      );
       setData((prev) => prev.filter((a) => a.id !== asignacionToDelete.id));
       toastRef.current.show({
         severity: "success",
@@ -373,8 +391,11 @@ const useAsignacionesRutas = (toastRef) => {
 
     setIsSubmitting(true);
     try {
-      const asignacionData = toApiFormat(nuevaAsignacion);
-      console.log("Datos de asignación a enviar:", asignacionData);
+      const asignacionData = toApiFormat(
+        nuevaAsignacion,
+        isEditing,
+        isEditing ? asignacionSeleccionada?.choferId : null
+      );
 
       if (isEditing) {
         const response = await api.put(
