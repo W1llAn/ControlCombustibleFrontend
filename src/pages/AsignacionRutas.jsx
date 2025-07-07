@@ -7,7 +7,15 @@ import FormularioGenerico from "../components/FormularioGenerico";
 import ModalFormulario from "../components/ModalFormulario";
 import AsignacionDetalles from "../components/AsignacionDetalles";
 import useAsignacionesRutas from "../hooks/useAsignacionesRutas";
-import { IconoCrear } from "../assets/IconosComponentes";
+import {
+  IconoCalendario,
+  IconoChofer,
+  IconoCrear,
+  IconoEstado,
+  IconoNombreVehiculo,
+  IconoPlaca,
+  IconoRuta,
+} from "../assets/IconosComponentes";
 import Boton from "../components/Boton";
 import AccionesTemplate from "../components/AccionesTemplate";
 import getBadgeClassType from "../utils/badges";
@@ -41,8 +49,12 @@ function AsignacionesRutas() {
   const columns = [
     {
       field: "fechaAsignacion",
-      header: "Fecha de Asignación",
       sortable: true,
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoCalendario /> Fecha de Asignación
+        </div>
+      ),
       body: (data) =>
         data.fechaAsignacion
           ? new Date(data.fechaAsignacion).toLocaleDateString("es-ES")
@@ -50,25 +62,51 @@ function AsignacionesRutas() {
     },
     {
       field: "chofer.nombre",
-      header: "Chofer",
       sortable: true,
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoChofer /> Chofer Asignado
+        </div>
+      ),
       body: (data) => data.chofer?.nombre || "No especificado",
     },
     {
       field: "vehiculo.placa",
-      header: "Vehículo",
       sortable: true,
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoPlaca /> Placa del Vehículo
+        </div>
+      ),
       body: (data) => data.vehiculo?.placa || "No especificado",
     },
     {
+      field: "vehiculo.nombre",
+      sortable: true,
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoNombreVehiculo /> Nombre del Vehículo
+        </div>
+      ),
+      body: (data) => data.vehiculo?.nombre || "No especificado",
+    },
+    {
       field: "ruta.nombre",
-      header: "Ruta",
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoRuta /> Ruta
+        </div>
+      ),
       sortable: true,
       body: (data) => data.ruta?.nombre || "No especificado",
     },
     {
       field: "estado",
-      header: "Estado",
+      header: (
+        <div className="flex items-center gap-2">
+          <IconoEstado /> Estado
+        </div>
+      ),
       sortable: true,
       body: (data) => (
         <span className={getBadgeClassType(data.estado)}>
