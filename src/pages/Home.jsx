@@ -5,20 +5,49 @@ import {
   IconoPerfil,
   IconoReportes,
   IconoRuta,
+  IconoComsumoCombsutible,
   IconoVehiculos,
 } from "../assets/IconosComponentes";
 import Vehiculos from "./Vehiculos";
 import Rutas from "./Rutas";
+import ConsumoCombustible from "./ConsumoCombustible";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
+
+  const obtenerPermiso = (modulo) => {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) return false;
+    try {
+      const decode = jwtDecode(token);
+      let rolUsuario = decode.Rol; // Asumiendo que el campo en el JWT es 'Rol'
+      switch (rolUsuario) {
+        case "Administrador":
+          return true;
+        case "Supervisor":
+          if (modulo === "consumoCombustible" || modulo === "reportes")
+            return true;
+          break;
+        case "Operador":
+          if (modulo === "consumoCombustible") return true;
+          break;
+        default:
+          return false;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return false;
+    }
+  };
 
   const handleLogout = () => {
     confirmDialog({
@@ -52,6 +81,20 @@ const Home = () => {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
       navigate("/login");
+    } else {
+      try {
+        const decode = jwtDecode(token);
+        const rolUsuario = decode.Rol; // Asumiendo que el campo en el JWT es 'Rol'
+        if (rolUsuario === "Supervisor") {
+          setActiveSection("consumoCombustible");
+        } else if (rolUsuario === "Operador") {
+          setActiveSection("consumoCombustible");
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        localStorage.removeItem("jwtToken");
+        navigate("/login");
+      }
     }
   }, [navigate]);
 
@@ -59,6 +102,11 @@ const Home = () => {
     { key: "vehiculos", label: "Vehiculos", icon: <IconoVehiculos /> },
     { key: "choferes", label: "Choferes", icon: <IconoChofer /> },
     { key: "rutas", label: "Rutas", icon: <IconoRuta /> },
+    {
+      key: "consumoCombustible",
+      label: "Consumo Combustible",
+      icon: <IconoComsumoCombsutible />,
+    },
     { key: "reportes", label: "Reportes", icon: <IconoReportes /> },
   ];
 
@@ -66,11 +114,16 @@ const Home = () => {
     "flex items-center px-6 py-3 mb-4 text-text-primary transition-colors duration-300 transform rounded-md cursor-pointer hover:bg-hover-gray";
 
   const renderSection = () => {
+    if (!obtenerPermiso(activeSection)) {
+      return <h1>Acceso denegado</h1>;
+    }
     switch (activeSection) {
       case "vehiculos":
         return <Vehiculos />;
       case "rutas":
         return <Rutas />;
+      case "consumoCombustible":
+        return <ConsumoCombustible />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
@@ -95,24 +148,27 @@ const Home = () => {
       </a>
 
       <nav className="mt-6 flex-1">
-        {navItems.map(({ key, label, icon }) => (
-          <div
-            key={key}
-            onClick={() => {
-              setActiveSection(key);
-              setSidebarOpen(false); // Cierra en móvil
-            }}
-            className={`${baseLinkClasses} ${
-              activeSection === key ? "bg-hover-gray text-gray-700" : ""
-            }`}>
-            <span className="mx-2">{icon}</span>
-            <span className="mx-4 font-semibold">{label}</span>
-          </div>
-        ))}
+        {navItems.map(
+          ({ key, label, icon }) =>
+            obtenerPermiso(key) && (
+              <div
+                key={key}
+                onClick={() => {
+                  setActiveSection(key);
+                  setSidebarOpen(false); // Cierra en móvil
+                }}
+                className={`${baseLinkClasses} ${
+                  activeSection === key ? "bg-hover-gray text-gray-700" : ""
+                }`}>
+                <span className="mx-2">{icon}</span>
+                <span className="mx-4 font-semibold">{label}</span>
+              </div>
+            )
+        )}
       </nav>
 
       <div
-        onClick={handleLogout} // Usar la nueva función aquí
+        onClick={handleLogout}
         className={`${baseLinkClasses} items-center justify-center mt-auto`}>
         <IconoCerrarSesion />
         <span className="mx-4 font-medium">Cerrar Sesión</span>
@@ -146,10 +202,10 @@ const Home = () => {
       {/* Contenido principal */}
       <main className="flex-1 overflow-y-auto">
         {/* Topbar */}
-        <div className="flex items-center justify-between md:justify-end bg-bg-primary shadow-md p-4 border-b border-gray-200 sticky top-0 z-10 ">
+        <div className="flex items-center justify-between md:justify-end bg-bg-primary shadow-md p-4 border-b border-gray-200 sticky top-0 z-10">
           {/* Menú móvil */}
           <button
-            className="md:hidden text-2xl text-gray-700 z-40"
+            className="md:hidden text-2xl text-gray-700 Nuance z-40"
             onClick={() => setSidebarOpen(!sidebarOpen)}>
             <i className="pi pi-bars" />
           </button>
