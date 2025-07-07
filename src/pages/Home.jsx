@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  IconoAsignacionRuta,
   IconoCerrarSesion,
   IconoChofer,
   IconoPerfil,
@@ -14,6 +15,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Choferes from "./Choferes";
+import AsignacionRutas from "./AsignacionRutas";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
@@ -60,6 +62,11 @@ const Home = () => {
     { key: "vehiculos", label: "Vehiculos", icon: <IconoVehiculos /> },
     { key: "choferes", label: "Choferes", icon: <IconoChofer /> },
     { key: "rutas", label: "Rutas", icon: <IconoRuta /> },
+    {
+      key: "asignacion_rutas",
+      label: "Asignación de Rutas",
+      icon: <IconoAsignacionRuta />,
+    },
     { key: "reportes", label: "Reportes", icon: <IconoReportes /> },
   ];
 
@@ -74,6 +81,8 @@ const Home = () => {
         return <Choferes />;
       case "rutas":
         return <Rutas />;
+      case "asignacion_rutas":
+        return <AsignacionRutas />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
