@@ -308,7 +308,8 @@ const useAsignacionesRutas = (toastRef) => {
     if (!asignacionToDelete) return;
 
     try {
-      await api.delete(`/AsignacionRutas/eliminar/${asignacionToDelete.id}`);
+      console.log("Eliminando asignación:", asignacionToDelete);
+      await api.delete(`/AsignacionRutas/eliminar/${asignacionToDelete.vehiculo.tipoMaquinaria}/${asignacionToDelete.id}`);
       setData((prev) => prev.filter((a) => a.id !== asignacionToDelete.id));
       toastRef.current.show({
         severity: "success",
