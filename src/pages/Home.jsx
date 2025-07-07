@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Choferes from "./Choferes";
 import AsignacionRutas from "./AsignacionRutas";
+import Reportes from "./Reportes";
 import Usuarios from "./Usuarios";
 
 const Home = () => {
@@ -110,7 +111,7 @@ const Home = () => {
     {
       key: "consumoCombustible",
       label: "Consumo Combustible",
-      icon: <IconoComsumoCombsutible />
+      icon: <IconoComsumoCombsutible />,
     },
     {
       key: "asignacion_rutas",
@@ -140,6 +141,8 @@ const Home = () => {
         return <ConsumoCombustible />;
       case "asignacion_rutas":
         return <AsignacionRutas />;
+      case "reportes":
+        return <Reportes />;
       case "usuarios":
         return <Usuarios />;
       default:
@@ -160,8 +163,7 @@ const Home = () => {
           style={{
             backgroundImage:
               "linear-gradient(to left, rgba(78, 89, 246), #725AC1)",
-          }}
-        >
+          }}>
           Control Combustibles XYZ
         </span>
       </a>
@@ -208,15 +210,13 @@ const Home = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-[rgba(0,0,0,0.22)] z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
+          onClick={() => setSidebarOpen(false)}></div>
       )}
 
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-bg-primary p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden`}
-      >
+        } transition-transform duration-300 ease-in-out md:hidden`}>
         <SidebarContent />
       </div>
 
