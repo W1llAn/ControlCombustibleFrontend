@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import DataTableGenerico from "../components/DataTableGenerico";
-import FormularioGenerico from "../components/FormularioGenerico";
+
 import ModalFormulario from "../components/ModalFormulario";
 import AsignacionDetalles from "../components/AsignacionDetalles";
 import useAsignacionesRutas from "../hooks/useAsignacionesRutas";
@@ -19,6 +19,7 @@ import {
 import Boton from "../components/Boton";
 import AccionesTemplate from "../components/AccionesTemplate";
 import getBadgeClassType from "../utils/badges";
+import FormularioAsignarRuta from "../components/FormularioAsignarRuta";
 function AsignacionesRutas() {
   const toast = useRef(null);
   const {
@@ -195,7 +196,7 @@ function AsignacionesRutas() {
         titulo={isEditing ? "Editar Asignación" : "Registrar Asignación"}
         footer={modalFooter}
       >
-        <FormularioGenerico
+        <FormularioAsignarRuta
           fields={formFields}
           formData={nuevaAsignacion}
           onChange={(field, value) => {

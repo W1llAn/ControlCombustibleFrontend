@@ -166,13 +166,13 @@ const useAsignacionesRutas = (toastRef) => {
   const getFormFields = () => {
     const baseFields = [
       {
-        name: "fechaAsignacion",
+        id: "fechaAsignacion",
         label: "Fecha de Asignación",
         type: "date",
         required: true,
       },
       {
-        name: "choferId",
+        id: "choferId",
         label: "Chofer",
         type: "dropdown",
         required: true,
@@ -185,7 +185,7 @@ const useAsignacionesRutas = (toastRef) => {
         onChange: handleChoferChange,
       },
       {
-        name: "vehiculoId",
+        id: "vehiculoId",
         label: "Vehículo",
         type: "dropdown",
         required: true,
@@ -197,7 +197,7 @@ const useAsignacionesRutas = (toastRef) => {
         filter: true,
       },
       {
-        name: "rutaId",
+        id: "rutaId",
         label: "Ruta",
         type: "dropdown",
         required: true,
@@ -212,7 +212,7 @@ const useAsignacionesRutas = (toastRef) => {
 
     if (isEditing) {
       baseFields.push({
-        name: "estado",
+        id: "estado",
         label: "Estado",
         type: "dropdown",
         required: true,
@@ -270,8 +270,11 @@ const useAsignacionesRutas = (toastRef) => {
   };
 
   const handleEdit = async (asignacion) => {
+    const tipoConexionUrl = asignacion.vehiculo.tipoMaquinaria;
     try {
-      const response = await api.get(`/AsignacionRutas/${asignacion.id}`);
+      const response = await api.get(
+        `/AsignacionRutas/${tipoConexionUrl}/${asignacion.id}`
+      );
       const asignacionData = toInternalFormat(response.data);
       setNuevaAsignacion(asignacionData);
       setAsignacionSeleccionada(asignacionData);
@@ -333,8 +336,11 @@ const useAsignacionesRutas = (toastRef) => {
   };
 
   const handleVerDetalles = async (asignacion) => {
+    const tipoConexionUrl = asignacion.vehiculo.tipoMaquinaria;
     try {
-      const response = await api.get(`/AsignacionRutas/${asignacion.id}`);
+      const response = await api.get(
+        `/AsignacionRutas/${tipoConexionUrl}/${asignacion.id}`
+      );
       setAsignacionSeleccionada(toInternalFormat(response.data));
       setDetalleVisible(true);
     } catch (err) {
