@@ -6,6 +6,7 @@ import {
   IconoPerfil,
   IconoReportes,
   IconoRuta,
+  IconoUsuarios,
   IconoComsumoCombsutible,
   IconoVehiculos,
 } from "../assets/IconosComponentes";
@@ -19,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Choferes from "./Choferes";
 import AsignacionRutas from "./AsignacionRutas";
+import Usuarios from "./Usuarios";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
@@ -115,6 +117,8 @@ const Home = () => {
       label: "Asignación de Rutas",
       icon: <IconoAsignacionRuta />,
     },
+    { key: "usuarios", label: "Usuarios", icon: <IconoUsuarios /> },
+
     { key: "reportes", label: "Reportes", icon: <IconoReportes /> },
   ];
 
@@ -136,6 +140,8 @@ const Home = () => {
         return <ConsumoCombustible />;
       case "asignacion_rutas":
         return <AsignacionRutas />;
+      case "usuarios":
+        return <Usuarios />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }

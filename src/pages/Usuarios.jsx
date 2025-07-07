@@ -5,114 +5,74 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import DataTableGenerico from "../components/DataTableGenerico";
 import FormularioGenerico from "../components/FormularioGenerico";
 import ModalFormulario from "../components/ModalFormulario";
-import AsignacionDetalles from "../components/AsignacionDetalles";
-import useAsignacionesRutas from "../hooks/useAsignacionesRutas";
+import useUsuarios from "../hooks/useUsuarios";
 import {
-  IconoCalendario,
-  IconoChofer,
   IconoCrear,
-  IconoEstado,
-  IconoNombreVehiculo,
+  IconoEmail,
+  IconoPersona,
   IconoPlaca,
-  IconoRuta,
 } from "../assets/IconosComponentes";
 import Boton from "../components/Boton";
 import AccionesTemplate from "../components/AccionesTemplate";
-import getBadgeClassType from "../utils/badges";
-function AsignacionesRutas() {
+import UsuarioDetalles from "../components/UsuarioDetalles";
+
+function Usuarios() {
   const toast = useRef(null);
   const {
     data,
     modalVisible,
     globalFilter,
     setGlobalFilter,
-    asignacionSeleccionada,
+    usuarioSeleccionado,
     detalleVisible,
     isEditing,
-    nuevaAsignacion,
-    setNuevaAsignacion,
+    nuevoUsuario,
+    setNuevoUsuario,
     formFields,
     isSubmitting,
     confirmDialogVisible,
-    asignacionToDelete,
-    handleNuevoAsignacion,
+    usuarioToDelete,
+    handleNuevoUsuario,
     handleEdit,
     handleDelete,
     confirmDelete,
     cancelDelete,
     handleVerDetalles,
     handleCancel,
-    handleGuardarAsignacion,
+    handleGuardarUsuario,
     handleCerrarDetalles,
-  } = useAsignacionesRutas(toast);
+  } = useUsuarios(toast);
 
   const columns = [
     {
-      field: "fechaAsignacion",
-      sortable: true,
+      field: "email",
       header: (
         <div className="flex items-center gap-2">
-          <IconoCalendario /> Fecha de Asignación
+          <IconoEmail /> Correo Electrónico
         </div>
       ),
-      body: (data) =>
-        data.fechaAsignacion
-          ? new Date(data.fechaAsignacion).toLocaleDateString("es-ES")
-          : "No especificado",
+      sortable: true,
+      body: (data) => data.email || "No especificado",
     },
     {
-      field: "chofer.nombre",
-      sortable: true,
+      field: "nombreUsuario",
       header: (
         <div className="flex items-center gap-2">
-          <IconoChofer /> Chofer Asignado
+          <IconoPlaca /> Nombre de Usuario
         </div>
       ),
-      body: (data) => data.chofer?.nombre || "No especificado",
+      sortable: true,
+      body: (data) => data.nombreUsuario || "No especificado",
     },
     {
-      field: "vehiculo.placa",
-      sortable: true,
+      field: "rol.nombre",
       header: (
         <div className="flex items-center gap-2">
-          <IconoPlaca /> Placa del Vehículo
-        </div>
-      ),
-      body: (data) => data.vehiculo?.placa || "No especificado",
-    },
-    {
-      field: "vehiculo.nombre",
-      sortable: true,
-      header: (
-        <div className="flex items-center gap-2">
-          <IconoNombreVehiculo /> Nombre del Vehículo
-        </div>
-      ),
-      body: (data) => data.vehiculo?.nombre || "No especificado",
-    },
-    {
-      field: "ruta.nombre",
-      header: (
-        <div className="flex items-center gap-2">
-          <IconoRuta /> Ruta
+          <IconoPersona /> Rol
         </div>
       ),
       sortable: true,
-      body: (data) => data.ruta?.nombre || "No especificado",
-    },
-    {
-      field: "estado",
-      header: (
-        <div className="flex items-center gap-2">
-          <IconoEstado /> Estado
-        </div>
-      ),
-      sortable: true,
-      body: (data) => (
-        <span className={getBadgeClassType(data.estado)}>
-          {data.estado || "No especificado"}
-        </span>
-      ),
+      body: (data) => data.rol?.nombre || "No especificado",
     },
   ];
 
@@ -122,7 +82,6 @@ function AsignacionesRutas() {
         data,
         onEdit: () => handleEdit(data),
         onDelete: () => handleDelete(data),
-        hideEdit: data.estado === "Completado",
       })}
       <Button
         icon="pi pi-eye"
@@ -147,7 +106,7 @@ function AsignacionesRutas() {
         label={isEditing ? "Actualizar" : "Guardar"}
         icon="pi pi-check"
         className="p-button-primary"
-        onClick={handleGuardarAsignacion}
+        onClick={handleGuardarUsuario}
         loading={isSubmitting}
       />
     </div>
@@ -159,12 +118,8 @@ function AsignacionesRutas() {
       <ConfirmDialog
         visible={confirmDialogVisible}
         onHide={cancelDelete}
-        message={`¿Estás seguro de que deseas eliminar la asignación del ${
-          asignacionToDelete?.fechaAsignacion
-            ? new Date(asignacionToDelete.fechaAsignacion).toLocaleDateString(
-                "es-ES"
-              )
-            : "desconocido"
+        message={`¿Estás seguro de que deseas eliminar al usuario ${
+          usuarioToDelete?.nombreUsuario || "desconocido"
         }?`}
         header="Confirmar Eliminación"
         icon="pi pi-exclamation-triangle"
@@ -174,11 +129,11 @@ function AsignacionesRutas() {
         rejectLabel="Cancelar"
       />
       <div className="flex flex-row justify-between">
-        <h1 className="text-3xl font-bold">Gestión de Asignaciones de Rutas</h1>
+        <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
         <Boton
-          text="Registrar Asignación"
+          text="Registrar Usuario"
           icon={IconoCrear}
-          onClick={handleNuevoAsignacion}
+          onClick={handleNuevoUsuario}
         />
       </div>
 
@@ -192,27 +147,24 @@ function AsignacionesRutas() {
       <ModalFormulario
         visible={modalVisible}
         onHide={handleCancel}
-        titulo={isEditing ? "Editar Asignación" : "Registrar Asignación"}
+        titulo={isEditing ? "Editar Usuario" : "Registrar Usuario"}
         footer={modalFooter}
       >
         <FormularioGenerico
           fields={formFields}
-          formData={nuevaAsignacion}
+          formData={nuevoUsuario}
           onChange={(field, value) => {
-            if (field === "choferId") {
-              formFields.find((f) => f.id === "choferId").onChange(value);
-            }
-            setNuevaAsignacion({ ...nuevaAsignacion, [field]: value });
+            setNuevoUsuario({ ...nuevoUsuario, [field]: value });
           }}
         />
       </ModalFormulario>
-      <AsignacionDetalles
+      <UsuarioDetalles
         visible={detalleVisible}
         onHide={handleCerrarDetalles}
-        asignacion={asignacionSeleccionada}
+        usuario={usuarioSeleccionado}
       />
     </section>
   );
 }
 
-export default AsignacionesRutas;
+export default Usuarios;

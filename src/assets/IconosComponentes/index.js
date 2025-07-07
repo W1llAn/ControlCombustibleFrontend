@@ -20,6 +20,8 @@ import IconoLocation from "./IconoLocation";
 import IconoComsumoCombsutible from "./IconoConsumoCombustible";
 import IconoAsignacionRuta from "./IconoAsgnacionRuta";
 import IconoGasolina from "./IconoGasolina";
+import IconoCalendario from "./IconoCalendario";
+import IconoEmail from "./IconoEmail";
 
 export {
   IconoEmpleados,
@@ -44,4 +46,6 @@ export {
   IconoTipoMaquinaria,
   IconoEstado,
   IconoPersona,
+  IconoCalendario,
+  IconoEmail,
 };
