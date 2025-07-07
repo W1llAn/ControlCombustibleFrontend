@@ -44,28 +44,28 @@ const useVehiculos = (toastRef) => {
   // Campos del formulario
   const formFields = [
     {
-      id: "placa",
+      name: "placa",
       label: "Placa",
       type: "text",
       required: true,
       placeholder: "Ej. ABC123",
     },
     {
-      id: "nombre",
+      name: "nombre",
       label: "Nombre del Vehículo",
       type: "text",
       required: true,
       placeholder: "Ej. Toyota Hilux",
     },
     {
-      id: "descripcion",
+      name: "descripcion",
       label: "Descripción",
       type: "text",
       required: false,
       placeholder: "Ej. Vehículo para transporte urbano",
     },
     {
-      id: "tipoMaquinaria",
+      name: "tipoMaquinaria",
       label: "Tipo de Maquinaria",
       type: "dropdown",
       required: true,
@@ -73,7 +73,7 @@ const useVehiculos = (toastRef) => {
       placeholder: "Seleccione un tipo",
     },
     {
-      id: "estadoOperativo",
+      name: "estadoOperativo",
       label: "Estado Operativo",
       type: "dropdown",
       required: true,
@@ -81,21 +81,21 @@ const useVehiculos = (toastRef) => {
       placeholder: "Seleccione un estado",
     },
     {
-      id: "capacidadCombustible",
+      name: "capacidadCombustible",
       label: "Capacidad de Combustible (litros)",
       type: "number",
       required: true,
       min: 0,
     },
     {
-      id: "consumoCombustibleKm",
+      name: "consumoCombustibleKm",
       label: "Consumo de Combustible (km/l)",
       type: "number",
       required: true,
       min: 0,
     },
     {
-      id: "fechaRegistro",
+      name: "fechaRegistro",
       label: "Fecha de Registro",
       type: "date",
       required: true,

@@ -46,21 +46,21 @@ const useChoferes = (toastRef) => {
   // Campos del formulario
   const baseFormFields = [
     {
-      id: "identificacion",
+      name: "identificacion",
       label: "Cédula",
       type: "text",
       required: true,
       placeholder: "Ej. 1234567890",
     },
     {
-      id: "nombre",
+      name: "nombre",
       label: "Nombre del Chofer",
       type: "text",
       required: true,
       placeholder: "Ej. Juan Pérez",
     },
     {
-      id: "email",
+      name: "email",
       label: "Correo Electrónico",
       type: "text",
       required: false,
@@ -68,7 +68,7 @@ const useChoferes = (toastRef) => {
     },
 
     {
-      id: "tipoMaquinaria",
+      name: "tipoMaquinaria",
       label: "Tipo de Maquinaria",
       type: "dropdown",
       required: true,
@@ -76,7 +76,7 @@ const useChoferes = (toastRef) => {
       placeholder: "Seleccione un tipo",
     },
     {
-      id: "disponible",
+      name: "disponible",
       label: "Disponibilidad",
       type: "dropdown",
       required: true,
@@ -87,7 +87,7 @@ const useChoferes = (toastRef) => {
       placeholder: "Seleccione disponibilidad",
     },
     {
-      id: "estado",
+      name: "estado",
       label: "Estado",
       type: "dropdown",
       required: true,
@@ -95,7 +95,7 @@ const useChoferes = (toastRef) => {
       placeholder: "Seleccione un estado",
     },
     {
-      id: "fechaNacimiento",
+      name: "fechaNacimiento",
       label: "Fecha de Nacimiento",
       type: "date",
       required: true,

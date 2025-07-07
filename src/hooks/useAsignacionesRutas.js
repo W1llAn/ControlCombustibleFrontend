@@ -166,13 +166,13 @@ const useAsignacionesRutas = (toastRef) => {
   const getFormFields = () => {
     const baseFields = [
       {
-        id: "fechaAsignacion",
+        name: "fechaAsignacion",
         label: "Fecha de Asignación",
         type: "date",
         required: true,
       },
       {
-        id: "choferId",
+        name: "choferId",
         label: "Chofer",
         type: "dropdown",
         required: true,
@@ -185,7 +185,7 @@ const useAsignacionesRutas = (toastRef) => {
         onChange: handleChoferChange,
       },
       {
-        id: "vehiculoId",
+        name: "vehiculoId",
         label: "Vehículo",
         type: "dropdown",
         required: true,
@@ -197,7 +197,7 @@ const useAsignacionesRutas = (toastRef) => {
         filter: true,
       },
       {
-        id: "rutaId",
+        name: "rutaId",
         label: "Ruta",
         type: "dropdown",
         required: true,
@@ -212,7 +212,7 @@ const useAsignacionesRutas = (toastRef) => {
 
     if (isEditing) {
       baseFields.push({
-        id: "estado",
+        name: "estado",
         label: "Estado",
         type: "dropdown",
         required: true,

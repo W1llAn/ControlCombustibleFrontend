@@ -88,7 +88,7 @@ const useUsuarios = (toastRef, authUserId) => {
   const getFormFields = () => {
     const baseFields = [
       {
-        id: "email",
+        name: "email",
         label: "Correo Electrónico",
         type: "text",
         required: true,
@@ -96,7 +96,7 @@ const useUsuarios = (toastRef, authUserId) => {
         value: nuevoUsuario.email,
       },
       {
-        id: "nombreUsuario",
+        name: "nombreUsuario",
         label: "Nombre de Usuario",
         type: "text",
         required: true,
@@ -104,7 +104,7 @@ const useUsuarios = (toastRef, authUserId) => {
         value: nuevoUsuario.nombreUsuario,
       },
       {
-        id: "hashContrasena",
+        name: "hashContrasena",
         label: "Contraseña",
         type: "password",
         required: true,
@@ -112,7 +112,7 @@ const useUsuarios = (toastRef, authUserId) => {
         value: nuevoUsuario.hashContrasena,
       },
       {
-        id: "rolId",
+        name: "rolId",
         label: "Rol",
         type: "dropdown",
         required: true,
