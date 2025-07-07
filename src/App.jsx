@@ -1,6 +1,6 @@
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./Components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 function App() {
