@@ -27,6 +27,10 @@ const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [idUsuario, setIdUsuario] = useState("");
+  const [infoUsuario, setInfoUsuario] = useState({
+    email: "",
+    rol: "",
+  });
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -93,6 +97,10 @@ const Home = () => {
     } else {
       try {
         const decode = jwtDecode(token);
+        setInfoUsuario({
+          email: decode.email || "No especificado",
+          rol: decode.Rol || "No especificado",
+        });
         const rolUsuario = decode.Rol;
         setIdUsuario(decode.idUsuario); // Asumiendo que el campo en el JWT es 'Rol'// Asumiendo que el campo en el JWT es 'id'
         if (rolUsuario === "Supervisor") {
@@ -246,13 +254,11 @@ const Home = () => {
             <IconoPerfil />
             <div className="text-right">
               <p className="text-text-primary font-semibold text-xs">
-                Administrador
+                {infoUsuario.rol || "No especificado"}
               </p>
-              <p className="text-text-primary font-semibold text-xs">
-                Juan Perez
-              </p>
+
               <span className="text-text-secondary font-light text-xs">
-                juanperez@gmail.com
+                {infoUsuario.email || "No especificado"}
               </span>
             </div>
           </div>
