@@ -255,7 +255,10 @@ const useVehiculos = (toastRef) => {
   // Abre el modal para editar un vehículo
   const handleEdit = async (vehiculo) => {
     try {
-      const response = await api.get(`/Vehiculos/${vehiculo.id}`);
+      const tipoMaquinaria = vehiculo.tipoMaquinaria;
+      const response = await api.get(
+        `/Vehiculos/${tipoMaquinaria}/${vehiculo.id}`
+      );
       setNuevoVehiculo(toInternalFormat(response.data));
       setVehiculoSeleccionado(toInternalFormat(response.data));
       setIsEditing(true);
@@ -280,9 +283,11 @@ const useVehiculos = (toastRef) => {
   // Confirma la eliminación del vehículo
   const confirmDelete = async () => {
     if (!vehiculoToDelete) return;
-
+    const tipoMaquinaria = vehiculoToDelete.tipoMaquinaria;
     try {
-      await api.delete(`/Vehiculos/eliminar/${vehiculoToDelete.id}`);
+      await api.delete(
+        `/Vehiculos/eliminar/${tipoMaquinaria}/${vehiculoToDelete.id}`
+      );
       setData((prev) => prev.filter((v) => v.id !== vehiculoToDelete.id));
       toastRef.current.show({
         severity: "success",
@@ -313,7 +318,10 @@ const useVehiculos = (toastRef) => {
   // Muestra los detalles de un vehículo
   const handleVerDetalles = async (vehiculo) => {
     try {
-      const response = await api.get(`/Vehiculos/${vehiculo.id}`);
+      const tipoMaquinaria = vehiculo.tipoMaquinaria;
+      const response = await api.get(
+        `/Vehiculos/${tipoMaquinaria}/${vehiculo.id}`
+      );
       setVehiculoSeleccionado(toInternalFormat(response.data));
       setDetalleVisible(true);
     } catch (err) {

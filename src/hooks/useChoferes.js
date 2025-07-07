@@ -18,7 +18,7 @@ const useChoferes = (toastRef) => {
     disponible: true,
     estado: "ACTIVO",
     fechaNacimiento: null,
-    rolId: 3,
+    rolId: 9,
   });
 
   // Estado del modal y chofer seleccionado
@@ -50,7 +50,7 @@ const useChoferes = (toastRef) => {
       label: "Cédula",
       type: "text",
       required: true,
-      placeholder: "Ej. 1234567890",
+      placeholder: "Ej. 1294567890",
     },
     {
       name: "nombre",
@@ -102,7 +102,7 @@ const useChoferes = (toastRef) => {
     },
   ];
   const formFields = isEditing
-    ? baseFormFields.filter((field) => field.id !== "email")
+    ? baseFormFields.filter((field) => field.name !== "email")
     : baseFormFields;
 
   // Convierte datos de la API al formato interno
@@ -119,7 +119,8 @@ const useChoferes = (toastRef) => {
     fechaNacimiento: apiData.fechaNacimiento
       ? new Date(apiData.fechaNacimiento)
       : null,
-    rolId: 3,
+    rolId: 9,
+    idUsuario: apiData.idUsuario || null,
   });
 
   // Convierte datos internos al formato de la API
@@ -136,8 +137,8 @@ const useChoferes = (toastRef) => {
     fechaNacimiento: internalData.fechaNacimiento
       ? internalData.fechaNacimiento.toISOString()
       : null,
-    rolId: 3,
-    idUsuario: internalData.id || null,
+    rolId: 9,
+    idUsuario: internalData.idUsuario || null,
   });
 
   // Cargar choferes al montar el componente
@@ -148,7 +149,7 @@ const useChoferes = (toastRef) => {
         .map(toInternalFormat)
         .sort(
           (a, b) => new Date(b.fechaNacimiento) - new Date(a.fechaNacimiento)
-        );
+        ); // Log para verificar los datos
       setData(sortedData);
       setLoading(false);
     } catch (err) {
@@ -158,7 +159,7 @@ const useChoferes = (toastRef) => {
         summary: "Error",
         detail:
           "No se pudieron cargar los choferes. Verifica la conexión con el servidor.",
-        life: 3000,
+        life: 9000,
       });
       setLoading(false);
     }
@@ -226,7 +227,7 @@ const useChoferes = (toastRef) => {
         severity: "success",
         summary: "Éxito",
         detail: "Disponibilidad actualizada correctamente",
-        life: 3000,
+        life: 9000,
       });
       console.log("Respuesta", response.data);
     } catch (err) {
@@ -235,7 +236,7 @@ const useChoferes = (toastRef) => {
         severity: "error",
         summary: "Error",
         detail: "No se pudo actualizar la disponibilidad",
-        life: 3000,
+        life: 9000,
       });
     }
   };
@@ -273,7 +274,7 @@ const useChoferes = (toastRef) => {
         severity: "error",
         summary: "Error",
         detail: "No se pudieron cargar los datos del chofer",
-        life: 3000,
+        life: 9000,
       });
     }
   };
@@ -295,7 +296,7 @@ const useChoferes = (toastRef) => {
         severity: "success",
         summary: "Éxito",
         detail: "Chofer eliminado correctamente",
-        life: 3000,
+        life: 9000,
       });
     } catch (err) {
       console.error("Error al eliminar el chofer:", err);
@@ -303,7 +304,7 @@ const useChoferes = (toastRef) => {
         severity: "error",
         summary: "Error",
         detail: "No se pudo eliminar el chofer",
-        life: 3000,
+        life: 9000,
       });
     } finally {
       setConfirmDialogVisible(false);
@@ -329,7 +330,7 @@ const useChoferes = (toastRef) => {
         severity: "error",
         summary: "Error",
         detail: "No se pudieron cargar los detalles del chofer",
-        life: 3000,
+        life: 9000,
       });
     }
   };
@@ -369,7 +370,7 @@ const useChoferes = (toastRef) => {
           severity: "success",
           summary: "Éxito",
           detail: "Chofer actualizado correctamente",
-          life: 3000,
+          life: 9000,
         });
         fetchChoferes(); // Recargar la lista de choferes
       } else {
@@ -380,7 +381,7 @@ const useChoferes = (toastRef) => {
           severity: "success",
           summary: "Éxito",
           detail: "Chofer creado correctamente",
-          life: 3000,
+          life: 9000,
         });
         fetchChoferes();
       }
@@ -391,7 +392,7 @@ const useChoferes = (toastRef) => {
         severity: "error",
         summary: "Error",
         detail: "No se pudo guardar el chofer",
-        life: 3000,
+        life: 9000,
       });
     } finally {
       setIsSubmitting(false);
