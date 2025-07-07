@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  IconoAsignacionRuta,
   IconoCerrarSesion,
   IconoChofer,
   IconoPerfil,
@@ -16,6 +17,8 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Choferes from "./Choferes";
+import AsignacionRutas from "./AsignacionRutas";
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("vehiculos");
@@ -105,7 +108,12 @@ const Home = () => {
     {
       key: "consumoCombustible",
       label: "Consumo Combustible",
-      icon: <IconoComsumoCombsutible />,
+      icon: <IconoComsumoCombsutible />
+    },
+    {
+      key: "asignacion_rutas",
+      label: "Asignación de Rutas",
+      icon: <IconoAsignacionRuta />,
     },
     { key: "reportes", label: "Reportes", icon: <IconoReportes /> },
   ];
@@ -120,10 +128,14 @@ const Home = () => {
     switch (activeSection) {
       case "vehiculos":
         return <Vehiculos />;
+      case "choferes":
+        return <Choferes />;
       case "rutas":
         return <Rutas />;
       case "consumoCombustible":
         return <ConsumoCombustible />;
+      case "asignacion_rutas":
+        return <AsignacionRutas />;
       default:
         return <h1>Sección: {activeSection}</h1>;
     }
@@ -142,7 +154,8 @@ const Home = () => {
           style={{
             backgroundImage:
               "linear-gradient(to left, rgba(78, 89, 246), #725AC1)",
-          }}>
+          }}
+        >
           Control Combustibles XYZ
         </span>
       </a>
@@ -189,13 +202,15 @@ const Home = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-[rgba(0,0,0,0.22)] z-20 md:hidden"
-          onClick={() => setSidebarOpen(false)}></div>
+          onClick={() => setSidebarOpen(false)}
+        ></div>
       )}
 
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-bg-primary p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out md:hidden`}>
+        } transition-transform duration-300 ease-in-out md:hidden`}
+      >
         <SidebarContent />
       </div>
 
