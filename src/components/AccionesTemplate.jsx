@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Button } from "primereact/button"; // Usamos íconos con p-button
 
-const AccionesTemplate = ({ rowData, onEdit, onDelete }) => {
+const AccionesTemplate = ({ rowData, onEdit, onDelete, hideEdit = false }) => {
   // Validaciones para asegurarse de que onEdit y onDelete sean funciones
   const handleEdit =
     typeof onEdit === "function" ? () => onEdit(rowData) : () => {};
@@ -9,13 +9,15 @@ const AccionesTemplate = ({ rowData, onEdit, onDelete }) => {
     typeof onDelete === "function" ? () => onDelete(rowData) : () => {};
   return (
     <div className="flex gap-2">
-      <Button
-        icon="pi pi-pencil"
-        className="p-button-rounded p-button-text p-button-sm"
-        onClick={handleEdit}
-        tooltip="Editar"
-        data-testid="edit-button"
-      />
+      {!hideEdit && (
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success p-button-text p-button-sm"
+          onClick={handleEdit}
+          tooltip="Editar"
+          tooltipOptions={{ position: "top" }}
+        />
+      )}
       <Button
         icon="pi pi-trash"
         className="p-button-rounded p-button-danger p-button-text p-button-sm"
