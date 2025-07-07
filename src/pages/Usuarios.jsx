@@ -16,7 +16,7 @@ import Boton from "../components/Boton";
 import AccionesTemplate from "../components/AccionesTemplate";
 import UsuarioDetalles from "../components/UsuarioDetalles";
 
-function Usuarios() {
+function Usuarios(idUsuario) {
   const toast = useRef(null);
   const {
     data,
@@ -41,7 +41,7 @@ function Usuarios() {
     handleCancel,
     handleGuardarUsuario,
     handleCerrarDetalles,
-  } = useUsuarios(toast);
+  } = useUsuarios(toast, idUsuario);
 
   const columns = [
     {

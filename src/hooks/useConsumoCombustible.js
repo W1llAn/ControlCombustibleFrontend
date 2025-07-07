@@ -148,9 +148,7 @@ const useConsumoCombustible = (toastRef) => {
 
   const fetchAsignaciones = async () => {
     try {
-      const response = await api.get(
-        "http://localhost:5050/AsignacionRutas/listar"
-      );
+      const response = await api.get("/AsignacionRutas/listar");
       const token = localStorage.getItem("jwtToken");
       let asignacionesFiltradas = response.data;
 

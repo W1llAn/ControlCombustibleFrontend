@@ -35,28 +35,28 @@ const useRutas = (toastRef) => {
   // Campos del formulario
   const formFields = [
     {
-      id: "nombre",
+      name: "nombre",
       label: "Nombre de la Ruta",
       type: "text",
       required: true,
       placeholder: "Ej. Ruta Norte",
     },
     {
-      id: "puntoInicio",
+      name: "puntoInicio",
       label: "Punto de Inicio",
       type: "text",
       required: true,
       placeholder: "Ej. Almacén Central",
     },
     {
-      id: "puntoFin",
+      name: "puntoFin",
       label: "Punto de Fin",
       type: "text",
       required: true,
       placeholder: "Ej. Distribuidora Norte",
     },
     {
-      id: "distancia",
+      name: "distancia",
       label: "Distancia (km)",
       type: "number",
       required: true,
@@ -65,7 +65,7 @@ const useRutas = (toastRef) => {
       placeholder: "Ej. 120.5",
     },
     {
-      id: "estado",
+      name: "estado",
       label: "Estado",
       type: "dropdown",
       required: true,
