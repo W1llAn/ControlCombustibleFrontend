@@ -1,15 +1,19 @@
 import React from "react";
 import ModalFormulario from "./ModalFormulario";
 
+// Función para formatear la fecha a DD/MM/YYYY
+const formatDate = (date) => {
+  if (!date || !(date instanceof Date) || isNaN(date)) {
+    return "No especificado";
+  }
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 const AsignacionDetalles = ({ visible, onHide, asignacion }) => {
-  const formatDate = (dateString) => {
-    if (!dateString) return "No especificado";
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  console.log("Detalles de la asignación:", asignacion);
 
   return (
     <ModalFormulario

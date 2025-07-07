@@ -46,7 +46,15 @@ function AsignacionesRutas() {
     handleGuardarAsignacion,
     handleCerrarDetalles,
   } = useAsignacionesRutas(toast);
-
+  const formatDate = (date) => {
+    if (!date || !(date instanceof Date) || isNaN(date)) {
+      return "No especificado";
+    }
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  };
   const columns = [
     {
       field: "fechaAsignacion",
@@ -56,10 +64,7 @@ function AsignacionesRutas() {
           <IconoCalendario /> Fecha de Asignación
         </div>
       ),
-      body: (data) =>
-        data.fechaAsignacion
-          ? new Date(data.fechaAsignacion).toLocaleDateString("es-ES")
-          : "No especificado",
+      body: (data) => formatDate(data.fechaAsignacion) || "No especificado",
     },
     {
       field: "chofer.nombre",

@@ -153,6 +153,8 @@ const useVehiculos = (toastRef) => {
 
   // Cargar vehículos al montar el componente
   const fetchVehicles = async () => {
+    console.log("Fetching vehicles from API...");
+
     try {
       const response = await api.get("/Vehiculos/listar");
       const sortedData = response.data
@@ -231,13 +233,7 @@ const useVehiculos = (toastRef) => {
       estadoOperativo: value ? "Operativo" : "Mantenimiento",
     };
     try {
-      console.log(
-        "Actualizando estado operativo para el vehículo:",
-        updatedVehicle
-      );
-
       const payload = toApiFormat(updatedVehicle, true, vehicle.tipoMaquinaria);
-      console.log("Payload para actualizar estado operativo:", payload); // Depuración
       await api.put("/Vehiculos/actualizar", payload);
       setData((prev) =>
         prev.map((vehiculo) => (vehiculo.id === id ? updatedVehicle : vehiculo))
@@ -248,6 +244,7 @@ const useVehiculos = (toastRef) => {
         detail: "Estado operativo actualizado correctamente",
         life: 3000,
       });
+      await fetchVehicles();
     } catch (err) {
       console.error("Error al actualizar el estado operativo:", err);
       toastRef.current.show({
@@ -289,6 +286,7 @@ const useVehiculos = (toastRef) => {
       setVehiculoSeleccionado(vehiculoData);
       setIsEditing(true);
       setModalVisible(true);
+      await fetchVehicles(); // Recargar la lista de vehículos
     } catch (err) {
       console.error("Error al cargar los datos del vehículo:", err);
       toastRef.current.show({
