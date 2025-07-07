@@ -244,7 +244,7 @@ const useConsumoCombustible = (toastRef) => {
 
   const handleEdit = async (consumo) => {
     try {
-      const response = await api.get(`/ConsumoCombustible/${consumo.id}`);
+      const response = await api.get(`/ConsumoCombustible/${consumo.vehiculo.tipoMaquinaria}/${consumo.id}`);
       const consumoData = toInternalFormat(response.data);
 
       // Calculamos el combustible estimado usando asignacionRutaId
@@ -278,7 +278,7 @@ const useConsumoCombustible = (toastRef) => {
   const confirmDelete = async () => {
     if (!consumoToDelete) return;
     try {
-      await api.delete(`/ConsumoCombustible/eliminar/${consumoToDelete.id}`);
+      await api.delete(`/ConsumoCombustible/eliminar/${consumoToDelete.vehiculo.tipoMaquinaria}/${consumoToDelete.id}`);
       setData((prev) => prev.filter((c) => c.id !== consumoToDelete.id));
       toastRef.current.show({
         severity: "success",
@@ -307,7 +307,10 @@ const useConsumoCombustible = (toastRef) => {
 
   const handleVerDetalles = async (consumo) => {
     try {
-      const response = await api.get(`/ConsumoCombustible/${consumo.id}`);
+      console.log("Cargando detalles para consumo:", consumo);
+      let tipoMaquinaria=consumo.vehiculo.tipoMaquinaria;
+      console.log(tipoMaquinaria);
+      const response = await api.get(`/ConsumoCombustible/${tipoMaquinaria}/${consumo.id}`);
       setConsumoSeleccionado(toInternalFormat(response.data));
       setDetalleVisible(true);
     } catch (err) {
@@ -339,7 +342,7 @@ const useConsumoCombustible = (toastRef) => {
       const consumoData = toApiFormat(nuevoConsumo);
       if (isEditing) {
         const response = await api.put(
-          "/ConsumoCombustible/actualizar",
+          `/ConsumoCombustible/actualizar/${nuevoConsumo.vehiculo.tipoMaquinaria}`,
           consumoData
         );
         setData((prev) =>
