@@ -243,10 +243,14 @@ const useConsumoCombustible = (toastRef) => {
   };
 
   const handleEdit = async (consumo) => {
+    console.log("Editando consumo:", consumo);
+
     try {
       const response = await api.get(
         `/ConsumoCombustible/${consumo.vehiculo.tipoMaquinaria}/${consumo.id}`
       );
+      console.log("Datos del consumo a editar:", response.data);
+
       const consumoData = toInternalFormat(response.data);
 
       // Calculamos el combustible estimado usando asignacionRutaId
